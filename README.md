@@ -1,3 +1,6 @@
+## Canlı Site Linki
+Oturum açma ve cihaz senkronizasyonuyla beraber burdan dilediğinizgibi kullanabilirsiniz dilerseniz hesap girmeden de kullanabilirsiniz(https://harcamatablo.netlify.app)
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
