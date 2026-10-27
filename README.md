@@ -1,19 +1,14 @@
+💰 Hesap Kitabı
+
 ## Canlı Site Linki
+
 Oturum açma ve cihaz senkronizasyonuyla beraber burdan dilediğinizgibi kullanabilirsiniz dilerseniz hesap girmeden de kullanabilirsiniz       (https://harcamatablo.netlify.app)
 
-# React + Vite
+Açıklama
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Gelir-gider takip uygulaması. Aylık özet, kategoriye göre harcama, günlük grafikler, yedek alma/yükleme ve hesapla giriş + cihazlar arası senkronizasyon özelliği var.Derleme, kurulum, sunucu yok sadece tarayıcıda
 
-Currently, two official plugins are available:
+İki şekilde çalışır:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Hesapsız: Hiçbir ayar yapmadan çalışır. Kayıtlar sadece tarayıcıda durur.
+Hesaplı: Google ya da e-posta ile giriş yaparsın,tüm cihazlarınla senkron olur. 
