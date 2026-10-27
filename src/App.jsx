@@ -230,13 +230,13 @@ button, input, select { font-family: inherit; }
 .hk-icon-btn svg { width: 15px; height: 15px; }
 .hk-none { font-size: 13px; color: #6f7291; padding: 18px 0; }
 
-.hk-foot { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 0 90px; }
+.hk-foot { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 0 130px; }
 .hk-fbtn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 12px; border: 1px solid #262a47; background: #141628; color: #e8e9f5; font-size: 12px; cursor: pointer; transition: background .15s; }
 .hk-fbtn:hover { background: #1c1f38; }
 .hk-fbtn svg { width: 14px; height: 14px; }
 .hk-file { display: none; }
 
-.hk-fab { position: fixed; right: 32px; bottom: 32px; width: 48px; height: 48px; border-radius: 50%; border: 0; background: #7478ff; color: #fff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 8px 24px rgba(116,120,255,.45); transition: transform .12s, background .15s; z-index: 20; }
+.hk-fab { position: fixed; right: 32px; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); width: 48px; height: 48px; border-radius: 50%; border: 0; background: #7478ff; color: #fff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 8px 24px rgba(116,120,255,.45); transition: transform .12s, background .15s; z-index: 20; }
 .hk-fab:hover { background: #8c90ff; }
 .hk-fab:active { transform: scale(.9); }
 .hk-fab svg { width: 24px; height: 24px; }
@@ -266,7 +266,7 @@ button, input, select { font-family: inherit; }
   .hk { padding: 20px 14px 40px; }
   .hk-grid { grid-template-columns: 1fr; }
   .hk-balance .big { font-size: 36px; }
-  .hk-fab { right: 18px; bottom: 18px; }
+  .hk-fab { right: 18px; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
 }
 `;
 
