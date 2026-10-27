@@ -4,6 +4,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip } fro
 import { Bar } from 'react-chartjs-2';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, doc, onSnapshot, setDoc } from 'firebase/firestore';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
@@ -18,10 +19,17 @@ const firebaseConfig = {
   messagingSenderId: '741274434933',
   appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:741274434933:web:8522dd927a08d2088f273c',
 };
-const getFirebaseAuth = () => {
+const getFirebaseApp = () => {
   if (!firebaseConfig.apiKey) return null;
-  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-  return getAuth(app);
+  return getApps().length ? getApp() : initializeApp(firebaseConfig);
+};
+const getFirebaseAuth = () => {
+  const app = getFirebaseApp();
+  return app ? getAuth(app) : null;
+};
+const getFirebaseDb = () => {
+  const app = getFirebaseApp();
+  return app ? getFirestore(app) : null;
 };
 
 /* ---------- Sabitler ---------- */
@@ -236,6 +244,8 @@ button, input, select { font-family: inherit; }
 .hk-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: grid; place-items: center; padding: 16px; z-index: 50; }
 .hk-modal { width: 100%; max-width: 380px; background: #12142a; border: 1px solid #262a47; border-radius: 16px; padding: 20px; box-shadow: 0 24px 60px rgba(0,0,0,.6); }
 .hk-modal h3 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+.hk-overlay.top { z-index: 60; }
+.hk-dlg-msg { font-size: 14px; line-height: 1.5; color: #e8e9f5; margin: 0 0 14px; white-space: pre-line; }
 .hk-form { display: flex; flex-direction: column; gap: 12px; }
 .hk-two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .hk-type { padding: 10px; border-radius: 12px; border: 0; background: #1c1f38; color: #e8e9f5; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s; }
@@ -263,6 +273,9 @@ button, input, select { font-family: inherit; }
 /* ---------- Uygulama ---------- */
 export default function App() {
   const [user, setUser] = useState(null);
+  const [syncState, setSyncState] = useState('local'); // local | loading | synced | error
+  const cloudReady = useRef(false); // ilk bulut verisi geldi mi?
+  const lastRemote = useRef(null); // buluta en son yazılan/okunan içeriğin özeti
   const [transactions, setTransactions] = useState(() => readJSON('hk_transactions', []));
   const [initialBalance, setInitialBalance] = useState(() => parseFloat(localStorage.getItem('hk_initial_balance')) || 0);
   const [selectedMonth, setSelectedMonth] = useState(todayStr().slice(0, 7));
@@ -276,6 +289,17 @@ export default function App() {
   const [description, setDescription] = useState('');
   const fileRef = useRef(null);
 
+  // Uygulamanın kendi pencereleri (tarayıcının alert/confirm/prompt kutuları engellenebildiği için)
+  const [dlg, setDlg] = useState(null); // { kind: 'alert'|'confirm'|'prompt', message, value, resolve }
+  const ask = (opts) => new Promise((resolve) => setDlg({ value: '', ...opts, resolve }));
+  const closeDlg = (result) => {
+    if (dlg) dlg.resolve(result);
+    setDlg(null);
+  };
+  const uiAlert = (message) => ask({ kind: 'alert', message });
+  const uiConfirm = (message) => ask({ kind: 'confirm', message });
+  const uiPrompt = (message, value = '') => ask({ kind: 'prompt', message, value: String(value) });
+
   useEffect(() => localStorage.setItem('hk_transactions', JSON.stringify(transactions)), [transactions]);
   useEffect(() => localStorage.setItem('hk_initial_balance', String(initialBalance)), [initialBalance]);
   // Firebase oturumunu dinle (sayfa yenilenince giriş korunur)
@@ -285,6 +309,60 @@ export default function App() {
     if (!auth) return;
     return onAuthStateChanged(auth, (u) => setUser(u ? { name: u.displayName, email: u.email, uid: u.uid } : null));
   }, []);
+
+  // Bulut eşleme (Firestore): her kullanıcının verisi users/{uid} belgesinde, sadece kendisi okuyup yazabilir
+  useEffect(() => {
+    const db = getFirebaseDb();
+    if (!user || !db) {
+      cloudReady.current = false;
+      lastRemote.current = null;
+      setSyncState('local');
+      return;
+    }
+    let first = true;
+    setSyncState('loading');
+    const unsub = onSnapshot(
+      doc(db, 'users', user.uid),
+      (snap) => {
+        if (snap.metadata.hasPendingWrites) return; // kendi yazdığımız değişikliğin yankısı
+        const data = snap.exists() ? snap.data() : null;
+        const remoteList = Array.isArray(data?.transactions) ? data.transactions : [];
+        const remoteBalance = typeof data?.initialBalance === 'number' ? data.initialBalance : null;
+        if (first) {
+          first = false;
+          // İlk eşleme: bu cihazdaki kayıtlarla buluttakileri id'ye göre birleştir
+          setTransactions((local) => {
+            const ids = new Set(remoteList.map((t) => t.id));
+            return [...remoteList, ...local.filter((t) => !ids.has(t.id))];
+          });
+          if (remoteBalance !== null) setInitialBalance(remoteBalance);
+          lastRemote.current = null; // birleşmiş hali buluta yazılsın
+          cloudReady.current = true;
+          setSyncState('synced');
+          return;
+        }
+        const bal = remoteBalance ?? 0;
+        const json = JSON.stringify({ transactions: remoteList, initialBalance: bal });
+        if (json === lastRemote.current) return;
+        lastRemote.current = json;
+        setTransactions(remoteList);
+        setInitialBalance(bal);
+      },
+      () => setSyncState('error')
+    );
+    return () => unsub();
+  }, [user]);
+
+  // Yerel değişiklikleri buluta yaz
+  useEffect(() => {
+    if (!user || !cloudReady.current) return;
+    const db = getFirebaseDb();
+    if (!db) return;
+    const json = JSON.stringify({ transactions, initialBalance });
+    if (json === lastRemote.current) return;
+    lastRemote.current = json;
+    setDoc(doc(db, 'users', user.uid), { transactions, initialBalance, updatedAt: Date.now() }).catch(() => setSyncState('error'));
+  }, [transactions, initialBalance, user]);
 
   const sum = (list, t) => list.filter((x) => x.type === t).reduce((a, x) => a + parseFloat(x.amount), 0);
   const currentBalance = initialBalance + sum(transactions, 'gelir') - sum(transactions, 'gider');
@@ -376,10 +454,9 @@ export default function App() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (item) => {
-    if (window.confirm(`${trDate(item.date)} - ${item.description || item.category} - ${fmt(item.amount)} ₺ silinsin mi?`)) {
-      setTransactions((prev) => prev.filter((t) => t.id !== item.id));
-    }
+  const handleDelete = async (item) => {
+    const ok = await uiConfirm(`${trDate(item.date)} - ${item.description || item.category} - ${fmt(item.amount)} ₺ silinsin mi?`);
+    if (ok) setTransactions((prev) => prev.filter((t) => t.id !== item.id));
   };
 
   const exportBackup = () => {
@@ -402,24 +479,24 @@ export default function App() {
         const { list, initial } = normalizeBackup(parsed);
         if (list.length === 0) {
           const keys = Array.isArray(parsed) ? 'liste' : Object.keys(parsed || {}).join(', ');
-          alert(`Dosyada okunabilir kayıt bulunamadı. (Dosyadaki alanlar: ${keys || 'boş'})`);
+          uiAlert(`Dosyada okunabilir kayıt bulunamadı. (Dosyadaki alanlar: ${keys || 'boş'})`);
           return;
         }
         setTransactions(list);
         if (typeof initial === 'number') setInitialBalance(initial);
         const months = [...new Set(list.map((t) => t.date.slice(0, 7)))].sort().reverse();
         if (!months.includes(selectedMonth)) setSelectedMonth(months[0]);
-        alert(`Yedek yüklendi! ${list.length} kayıt aktarıldı.`);
+        uiAlert(`Yedek yüklendi! ${list.length} kayıt aktarıldı.`);
       } catch {
-        alert('Geçersiz dosya! Dosya bozuk veya JSON değil.');
+        uiAlert('Geçersiz dosya! Dosya bozuk veya JSON değil.');
       }
     };
     reader.readAsText(file, 'UTF-8');
     e.target.value = '';
   };
 
-  const handleSetInitialBalance = () => {
-    const val = prompt('Başlangıç bakiyesi (₺):', initialBalance);
+  const handleSetInitialBalance = async () => {
+    const val = await uiPrompt('Başlangıç bakiyesi (₺):', initialBalance);
     if (val === null) return;
     const n = parseFloat(String(val).replace(',', '.'));
     if (!isNaN(n)) setInitialBalance(n);
@@ -428,7 +505,7 @@ export default function App() {
   const handleLogin = async () => {
     const auth = getFirebaseAuth();
     if (!auth) {
-      alert('Firebase ayarı eksik: .env dosyasına VITE_FIREBASE_API_KEY ve VITE_FIREBASE_APP_ID ekleyip siteyi yeniden başlat.');
+      uiAlert('Firebase ayarı eksik: .env dosyasına VITE_FIREBASE_API_KEY ve VITE_FIREBASE_APP_ID ekleyip siteyi yeniden başlat.');
       return;
     }
     const provider = new GoogleAuthProvider();
@@ -437,18 +514,24 @@ export default function App() {
       await signInWithPopup(auth, provider);
     } catch (err) {
       if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') return;
-      if (err.code === 'auth/api-key-not-valid.-please-pass-a-valid-api-key.' || err.code === 'auth/invalid-api-key') alert('API anahtarı geçersiz. Firebase Console\'daki apiKey değerini koddaki firebaseConfig içine harfi harfine kopyala.');
-      else if (err.code === 'auth/operation-not-allowed') alert('Google girişi kapalı. Firebase > Authentication > Sign-in method > Google\'ı etkinleştir.');
-      else if (err.code === 'auth/unauthorized-domain') alert('Bu alan adı Firebase\'de yetkili değil. Authentication > Settings > Authorized domains kısmına ekle.');
-      else alert(`Giriş yapılamadı (${err.code || err.message})`);
+      if (err.code === 'auth/api-key-not-valid.-please-pass-a-valid-api-key.' || err.code === 'auth/invalid-api-key') uiAlert('API anahtarı geçersiz. Firebase Console\'daki apiKey değerini koddaki firebaseConfig içine harfi harfine kopyala.');
+      else if (err.code === 'auth/operation-not-allowed') uiAlert('Google girişi kapalı. Firebase > Authentication > Sign-in method > Google\'ı etkinleştir.');
+      else if (err.code === 'auth/unauthorized-domain') uiAlert('Bu alan adı Firebase\'de yetkili değil. Authentication > Settings > Authorized domains kısmına ekle.');
+      else if (err.code === 'auth/popup-blocked') uiAlert('Tarayıcı giriş penceresini engelledi. Adres çubuğundaki "pencere engellendi" simgesinden izin verip tekrar dene.');
+      else uiAlert(`Giriş yapılamadı (${err.code || err.message})`);
     }
   };
 
   const handleLogout = async () => {
+    if (!(await uiConfirm('Çıkış yapınca bu cihazdaki kayıtlar temizlenir; hesabında kayıtlı kalır. Devam edilsin mi?'))) return;
+    cloudReady.current = false; // temizlenen veri buluta yazılmasın
+    lastRemote.current = null;
     const auth = getFirebaseAuth();
     try {
       if (auth) await signOut(auth);
     } finally {
+      setTransactions([]);
+      setInitialBalance(0);
       setUser(null);
     }
   };
@@ -463,7 +546,14 @@ export default function App() {
             <h1 className="hk-title">Hesap Kitap</h1>
           </div>
           <p className="hk-sub">Gelir gider takibim</p>
-          {user && <p className="hk-user">✓ Eşleşti • {user.email}</p>}
+          {user && (
+            <p className="hk-user">
+              {syncState === 'synced' && `✓ Eşleşti • ${user.email}`}
+              {syncState === 'loading' && `Eşleniyor… • ${user.email}`}
+              {syncState === 'error' && `⚠ Eşleme hatası • ${user.email} (Firestore kurallarını kontrol et)`}
+              {syncState === 'local' && user.email}
+            </p>
+          )}
         </header>
 
         <section className="hk-balance">
@@ -601,6 +691,31 @@ export default function App() {
                   <button type="submit" className="hk-save">Kaydet</button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+        {dlg && (
+          <div className="hk-overlay top" onClick={() => closeDlg(dlg.kind === 'confirm' ? false : dlg.kind === 'prompt' ? null : undefined)}>
+            <div className="hk-modal" onClick={(e) => e.stopPropagation()}>
+              <p className="hk-dlg-msg">{dlg.message}</p>
+              {dlg.kind === 'prompt' && (
+                <input
+                  className="hk-input"
+                  autoFocus
+                  value={dlg.value}
+                  onChange={(e) => setDlg({ ...dlg, value: e.target.value })}
+                  onKeyDown={(e) => e.key === 'Enter' && closeDlg(dlg.value)}
+                  style={{ marginBottom: 14 }}
+                />
+              )}
+              {dlg.kind === 'alert' ? (
+                <button className="hk-save" style={{ width: '100%' }} onClick={() => closeDlg()} autoFocus>Tamam</button>
+              ) : (
+                <div className="hk-two">
+                  <button className="hk-cancel" onClick={() => closeDlg(dlg.kind === 'confirm' ? false : null)}>Vazgeç</button>
+                  <button className="hk-save" onClick={() => closeDlg(dlg.kind === 'confirm' ? true : dlg.value)} autoFocus={dlg.kind === 'confirm'}>Tamam</button>
+                </div>
+              )}
             </div>
           </div>
         )}
