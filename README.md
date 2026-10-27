@@ -1,4 +1,4 @@
-💰 Hesap Kitap
+💰 Hesap Takip
 
 ## Canlı Site Linki
 
