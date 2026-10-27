@@ -4,7 +4,7 @@
 
 Oturum açma ve cihaz senkronizasyonuyla beraber burdan dilediğinizgibi kullanabilirsiniz dilerseniz hesap girmeden de kullanabilirsiniz                               (https://harcamatablo.netlify.app)
 
-Açıklama
+##Açıklama
 
 Harcama takip uygulaması. Aylık özet, kategoriye göre harcama, günlük grafikler, yedek alma/yükleme ve hesapla giriş + cihazlar arası senkronizasyon özelliği var. Derleme, kurulum, sunucu yok sadece tarayıcıda
 
