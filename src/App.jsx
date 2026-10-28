@@ -192,12 +192,11 @@ const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 *, *::before, *::after { box-sizing: border-box; }
 @property --p { syntax: '<number>'; inherits: true; initial-value: 0.5; }
-@property --wx { syntax: '<length>'; inherits: true; initial-value: 0px; }
 html, body { margin: 0; padding: 0; display: block; width: 100%; max-width: none; min-width: 0; background: #fff6fb; color-scheme: light; text-align: left; }
 #root { max-width: none; width: 100%; margin: 0; padding: 0; text-align: left; }
 button, input, select { font-family: inherit; }
 
-.hk { --ink: #1f1a4d; --mute: #6b6a93; position: relative; overflow: hidden; min-height: 100vh; color: var(--ink); font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; padding: 26px 18px 40px; --cyc: 8s; animation: hk-spin var(--cyc) steps(64, end) infinite alternate, hk-wx var(--cyc) linear infinite;
+.hk { --ink: #1f1a4d; --mute: #6b6a93; position: relative; overflow: hidden; min-height: 100vh; color: var(--ink); font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; padding: 26px 18px 40px; --cyc: 8s; animation: hk-spin var(--cyc) ease-in-out infinite alternate;
   --p: .5;
   --h1: calc(215 + 76 * var(--p)); --h2: calc(272 + 76 * var(--p)); --h3: calc(329 + 76 * var(--p)); --h4: calc(243 + 76 * var(--p)); --h5: calc(300 + 76 * var(--p));
   --c1: oklch(.76 .16 var(--h1)); --c2: oklch(.74 .18 var(--h2)); --c3: oklch(.74 .19 var(--h3)); --c4: oklch(.75 .17 var(--h4)); --c5: oklch(.74 .19 var(--h5));
@@ -211,7 +210,7 @@ button, input, select { font-family: inherit; }
     radial-gradient(800px 600px at 0% 95%, var(--b4) 0%, transparent 55%),
     #fff7fb; }
 .hk h1, .hk h2, .hk h3, .hk p { margin: 0; }
-.hk-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; pointer-events: none; z-index: 0; will-change: transform; animation: hk-drift 16s ease-in-out infinite alternate; }
+.hk-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; pointer-events: none; z-index: 0; animation: hk-drift 16s ease-in-out infinite alternate; }
 .hk-blob.b1 { width: 340px; height: 340px; background: var(--c3); top: 12%; left: -90px; }
 .hk-blob.b2 { width: 300px; height: 300px; background: var(--c1); top: 40%; right: -80px; animation-delay: -5s; }
 .hk-blob.b3 { width: 280px; height: 280px; background: var(--c2); bottom: -80px; left: 30%; animation-delay: -9s; }
@@ -245,7 +244,7 @@ button, input, select { font-family: inherit; }
 .hk-stat.in { background: linear-gradient(135deg, var(--d1), var(--d2)); box-shadow: 0 16px 34px color-mix(in srgb, var(--d1) 40%, transparent); }
 .hk-stat.out { background: linear-gradient(135deg, var(--d3), var(--d2)); box-shadow: 0 16px 34px color-mix(in srgb, var(--d3) 40%, transparent); animation-delay: .2s; }
 .hk-stat::after { content: ''; position: absolute; width: 110px; height: 110px; border-radius: 50%; right: -30px; top: -40px; background: rgba(255,255,255,.22); }
-.hk-stat .lbl { font-size: 12px; font-weight: 500; opacity: .95; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.hk-stat .lbl { font-size: 12px; font-weight: 500; opacity: .95; display: flex; align-items: center; gap: 6px; }
 .hk-stat .lbl svg { width: 15px; height: 15px; }
 .hk-stat b { margin-top: 4px; font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; position: relative; z-index: 1; }
 
@@ -254,7 +253,6 @@ button, input, select { font-family: inherit; }
 .hk .hk-sumhead h2 { display: flex; align-items: center; gap: 10px; font-size: 25px; font-weight: 800; letter-spacing: -.01em; color: #1f1a4d; -webkit-text-fill-color: #1f1a4d; opacity: 1; text-shadow: 0 2px 0 rgba(255,255,255,.9); }
 .hk .hk-sumhead h2::before { content: ''; width: 8px; height: 28px; border-radius: 99px; background: linear-gradient(180deg, var(--c1), var(--c2), var(--c3)); }
 .hk-select { background: #fff; color: var(--ink); border: 2px solid transparent; border-radius: 999px; padding: 9px 18px; font-size: 14px; font-weight: 600; cursor: pointer; outline: none; box-shadow: 0 6px 18px rgba(80,60,160,.14); background-image: linear-gradient(#fff, #fff), linear-gradient(90deg, var(--c1), var(--c2), var(--c3)); background-origin: border-box; background-clip: padding-box, border-box; transition: box-shadow .2s; }
-.hk-select { background-image: linear-gradient(#fff, #fff), var(--wc); background-size: 100% 100%, var(--vw2, 800px) 100%; background-repeat: no-repeat, repeat-x; background-position: 0 0, calc(var(--wx, 0px) - var(--ox, 0px)) 50%; }
 .hk-select:focus { box-shadow: 0 0 0 4px rgba(155,92,255,.25); }
 
 .hk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -298,7 +296,7 @@ button, input, select { font-family: inherit; }
 .hk-icon-btn.del { background: #ffe9ee; color: #e11d48; }
 .hk-icon-btn.del:hover { background: #e11d48; color: #fff; }
 .hk-icon-btn svg { width: 15px; height: 15px; }
-.hk-none { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: 36px 18px; background: rgba(255,255,255,.9); border-radius: 28px; border: 2px dashed #d8cbff; }
+.hk-none { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: 36px 18px; background: rgba(255,255,255,.78); border-radius: 28px; border: 2px dashed #d8cbff; backdrop-filter: blur(6px); }
 .hk-none-ico { width: 74px; height: 74px; border-radius: 26px; display: grid; place-items: center; color: #fff; margin-bottom: 6px; background: linear-gradient(135deg, var(--d1), var(--d2) 55%, var(--d3)); box-shadow: 0 14px 30px rgba(255,77,141,.38); animation: hk-float 3.4s ease-in-out infinite; }
 .hk-none-ico svg { width: 36px; height: 36px; }
 .hk-none b { font-size: 18px; font-weight: 800; color: var(--ink); }
@@ -319,8 +317,7 @@ button, input, select { font-family: inherit; }
 .hk-fbtn:hover svg { transform: rotate(-15deg) scale(1.2); }
 .hk-file { display: none; }
 
-.hk-fab { position: fixed; right: 30px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); width: 62px; height: 62px; border-radius: 50%; border: 0; background: linear-gradient(135deg, var(--d1), var(--d2), var(--d3)); color: #fff; display: grid; place-items: center; cursor: pointer; transition: transform .2s; z-index: 20; box-shadow: 0 12px 28px color-mix(in srgb, var(--d2) 55%, transparent); }
-.hk-fab::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--d2); z-index: -1; opacity: 0; animation: hk-ring 2.6s ease-out infinite; }
+.hk-fab { position: fixed; right: 30px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); width: 62px; height: 62px; border-radius: 50%; border: 0; background: linear-gradient(135deg, var(--d1), var(--d2), var(--d3)); color: #fff; display: grid; place-items: center; cursor: pointer; transition: transform .2s; z-index: 20; animation: hk-pulse 2.6s ease-out infinite; }
 .hk-fab:hover { transform: rotate(90deg) scale(1.1); }
 .hk-fab:active { transform: scale(.9); }
 .hk-fab svg { width: 30px; height: 30px; }
@@ -349,51 +346,24 @@ button, input, select { font-family: inherit; }
 .hk-save { color: #fff; background: linear-gradient(135deg, var(--d2), var(--d3)); box-shadow: 0 10px 22px rgba(155,92,255,.35); }
 .hk-save:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(155,92,255,.45); }
 
-/* Renkler tüm ekranda tek bir dalga olarak soldan sağa akar (arka plan dahil, hepsi senkron).
-   --ox: öğenin soldan uzaklığı, --vw2: ekran genişliğinin 2 katı (ikisini de aşağıdaki effect yazar). */
-.hk { --wd: linear-gradient(90deg, var(--d1), var(--d2), var(--d3), var(--d2), var(--d1));
-  --wc: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c2), var(--c1));
-  --we: linear-gradient(90deg, oklch(.93 .06 var(--h1)), oklch(.93 .06 var(--h2)), oklch(.93 .06 var(--h3)), oklch(.93 .06 var(--h2)), oklch(.93 .06 var(--h1))); }
-.hk-title, .hk-logo, .hk-balance, .hk-stat.in, .hk-stat.out, .hk-fab, .hk-date, .hk-none-ico, .hk-none button,
-.hk-fbtn:nth-of-type(n), .hk-save, .hk-type.on-in, .hk-type.on-out, .hk-chip.ok i { background-image: var(--wd); }
-.hk-panel::before, .hk-modal::before, .hk-blob.b1, .hk-blob.b2, .hk-blob.b3 { background-image: var(--wc); }
-.hk-bg { background-image: var(--we); background-color: #fff7fb; }
-.hk-title, .hk-logo, .hk-balance, .hk-stat.in, .hk-stat.out, .hk-fab, .hk-date, .hk-none-ico, .hk-none button,
-.hk-fbtn:nth-of-type(n), .hk-save, .hk-type.on-in, .hk-type.on-out, .hk-chip.ok i, .hk-panel::before, .hk-modal::before,
-.hk-bg, .hk-blob.b1, .hk-blob.b2, .hk-blob.b3 { background-size: var(--vw2, 800px) 100%; background-repeat: repeat-x; background-position: calc(var(--wx, 0px) - var(--ox, 0px)) 50%; }
-.hk-logo, .hk-none-ico { animation: hk-float 3.4s ease-in-out infinite; }
-.hk-balance { animation: hk-rise .7s cubic-bezier(.2,.8,.2,1) both; }
-.hk-stat.in { animation: hk-rise .7s .1s cubic-bezier(.2,.8,.2,1) both; }
-.hk-stat.out { animation: hk-rise .7s .2s cubic-bezier(.2,.8,.2,1) both; }
-.hk-blob.b1, .hk-blob.b2, .hk-blob.b3 { animation: hk-drift 16s ease-in-out infinite alternate; }
-.hk-blob.b2 { animation-delay: -5s; }
-.hk-blob.b3 { animation-delay: -9s; }
-@keyframes hk-wx { from { --wx: 0px; } to { --wx: var(--vw2, 800px); } }
 @keyframes hk-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes hk-slide { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
 @keyframes hk-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes hk-flow { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 @keyframes hk-float { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-5px) rotate(-5deg); } }
 @keyframes hk-drift { to { transform: translate(60px, 40px) scale(1.2); } }
-@keyframes hk-ring { from { transform: scale(1); opacity: .5; } to { transform: scale(1.55); opacity: 0; } }
+@keyframes hk-pulse { 0% { box-shadow: 0 12px 28px rgba(255,77,141,.55), 0 0 0 0 rgba(255,122,26,.5); } 70%,100% { box-shadow: 0 12px 28px rgba(255,77,141,.55), 0 0 0 22px rgba(255,122,26,0); } }
 @keyframes hk-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes hk-pop { from { opacity: 0; transform: scale(.9) translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes hk-spin { from { --p: 0; } to { --p: 1; } }
 @media (max-width: 760px) {
   .hk { padding: 18px 14px 40px; }
-  .hk-blob { filter: blur(44px); }
-  .hk-blob.b3 { display: none; }
-  .hk-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 8px 0 130px; }
-  .hk-fbtn { justify-content: center; gap: 6px; padding: 13px 8px; font-size: 12px; line-height: 1.25; text-align: center; }
-  .hk-fbtn svg { width: 15px; height: 15px; flex-shrink: 0; }
   .hk-hero { grid-template-columns: 1fr; }
   .hk-side { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
   .hk-grid { grid-template-columns: 1fr; }
   .hk-balance { padding: 24px 22px; }
   .hk-balance .big { font-size: 38px; }
   .hk-stat b { font-size: 19px; }
-  .hk-stat { padding: 18px 14px; }
-  .hk-stat .lbl { font-size: 11.5px; gap: 4px; }
   .hk-fab { right: 18px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -451,7 +421,6 @@ export default function App() {
   const fileRef = useRef(null);
   const hoverIdx = useRef(null);
   const ptrY = useRef(-1); // grafikte imlecin/parmağın dikey konumu
-  const rootRef = useRef(null);
 
   const [dlg, setDlg] = useState(null);
   const ask = (opts) => new Promise((resolve) => setDlg({ value: '', ...opts, resolve }));
@@ -464,30 +433,6 @@ export default function App() {
   const uiPrompt = (message, value = '') => ask({ kind: 'prompt', message, value: String(value) });
 
   useEffect(() => localStorage.setItem('hk_transactions', JSON.stringify(transactions)), [transactions]);
-  // Renk dalgasını ekran genelinde senkron tut: her renkli öğeye soldan uzaklığını (--ox), köke ekran genişliğini (--vw2) yaz
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    const SEL = '.hk-bg, .hk-blob, .hk-title, .hk-logo, .hk-balance, .hk-stat, .hk-fab, .hk-date, .hk-none-ico, .hk-none button, .hk-fbtn, .hk-save, .hk-type, .hk-chip i, .hk-panel, .hk-modal, .hk-select';
-    const left = (el) => { let x = 0; for (let n = el; n; n = n.offsetParent) x += n.offsetLeft + (n === el ? 0 : n.clientLeft); return x; };
-    let raf = 0;
-    const apply = () => {
-      raf = 0;
-      root.style.setProperty('--vw2', window.innerWidth * 2 + 'px');
-      root.querySelectorAll(SEL).forEach((el) => {
-        const v = left(el) + 'px';
-        if (el.style.getPropertyValue('--ox') !== v) el.style.setProperty('--ox', v);
-      });
-    };
-    const schedule = () => { if (!raf) raf = requestAnimationFrame(apply); };
-    apply();
-    window.addEventListener('resize', schedule);
-    window.addEventListener('load', schedule);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
-    const mo = new MutationObserver(schedule);
-    mo.observe(root, { childList: true, subtree: true });
-    return () => { window.removeEventListener('resize', schedule); window.removeEventListener('load', schedule); mo.disconnect(); cancelAnimationFrame(raf); };
-  }, []);
   useEffect(() => {
     const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ff7a1a'/><stop offset='.5' stop-color='#ff4d8d'/><stop offset='1' stop-color='#9b5cff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(#g)'/><text x='32' y='45' font-size='38' font-weight='800' text-anchor='middle' fill='#fff' font-family='Segoe UI,Arial,sans-serif'>₺</text><circle cx='51' cy='13' r='5' fill='#ffd25e'/></svg>";
     let link = document.querySelector("link[rel~='icon']");
@@ -799,7 +744,7 @@ export default function App() {
   const chipClass = syncState === 'synced' ? 'ok' : syncState === 'error' ? 'err' : '';
 
   return (
-    <div className="hk" ref={rootRef}>
+    <div className="hk">
       <style>{CSS}</style>
       <div className="hk-bg">
         <span className="hk-blob b1" />
