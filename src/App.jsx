@@ -420,6 +420,7 @@ export default function App() {
   const [description, setDescription] = useState('');
   const fileRef = useRef(null);
   const hoverIdx = useRef(null);
+  const ptrY = useRef(-1); // grafikte imlecin/parmağın dikey konumu
 
   const [dlg, setDlg] = useState(null);
   const ask = (opts) => new Promise((resolve) => setDlg({ value: '', ...opts, resolve }));
@@ -571,9 +572,14 @@ export default function App() {
     responsive: true,
     maintainAspectRatio: false,
     animation: { duration: 700, easing: 'easeOutQuart' },
+    // Kaydırırken tetiklenmesin: sadece fare hareketi ve dokunup bırakma (tıklama) dinlenir
+    events: ['mousemove', 'mouseout', 'click'],
     interaction: { mode: 'index', intersect: false },
-    onHover: (_e, els, chart) => {
-      const idx = els.length ? els[0].index : null;
+    onHover: (e, els, chart) => {
+      ptrY.current = e.y ?? -1;
+      const el = els.length ? els[0] : null;
+      // Sadece çubuğa yakınken (en fazla 26px yukarısına kadar) algıla
+      const idx = el && ptrY.current >= el.element.y - 26 ? el.index : null;
       if (idx !== hoverIdx.current) {
         hoverIdx.current = idx;
         chart.update('none');
@@ -582,6 +588,7 @@ export default function App() {
     plugins: {
       legend: { display: false },
       tooltip: {
+        filter: (item) => ptrY.current >= item.element.y - 26,
         backgroundColor: '#1f1a4d',
         titleColor: '#ffd25e',
         bodyColor: '#fff',
