@@ -50,16 +50,16 @@ const CATEGORIES = {
 };
 const CAT_COLORS = {
   'Yemek': '#ff7a1a',
-  'Market': '#10c98f',
+  'Market': '#14b8d4',
   'Yurt/KYK': '#3b7bff',
   'Abonelik': '#9b5cff',
   'Eğlence': '#ff4d8d',
   'Kişisel Bakım': '#06b6d4',
   'Ulaşım': '#f5b700',
   'Diğer': '#7c83c9',
-  'Burs/Harçlık': '#16c784',
-  'Maaş': '#0ea5e9',
-  'Diğer Gelir': '#84cc16',
+  'Burs/Harçlık': '#2f9bff',
+  'Maaş': '#6a7cff',
+  'Diğer Gelir': '#5bc8f5',
 };
 const colorOf = (name) => CAT_COLORS[name] || '#7c83c9';
 const ALL_CATEGORIES = [...CATEGORIES.gider, ...CATEGORIES.gelir];
@@ -196,19 +196,19 @@ html, body { margin: 0; padding: 0; display: block; width: 100%; max-width: none
 #root { max-width: none; width: 100%; margin: 0; padding: 0; text-align: left; }
 button, input, select { font-family: inherit; }
 
-.hk { --ink: #1f1a4d; --mute: #6b6a93; position: relative; overflow: hidden; min-height: 100vh; color: var(--ink); font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; padding: 26px 18px 40px; --cyc: 12s; animation: hk-spin var(--cyc) linear infinite; }
+.hk { --ink: #1f1a4d; --mute: #6b6a93; position: relative; overflow: hidden; min-height: 100vh; color: var(--ink); font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; padding: 26px 18px 40px; --cyc: 14s; animation: hk-spin var(--cyc) ease-in-out infinite alternate; }
 .hk-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; filter: hue-rotate(var(--hk-hue));
   background:
     radial-gradient(900px 500px at 8% -5%, #ffd6ec 0%, transparent 60%),
     radial-gradient(800px 500px at 100% 5%, #cfe3ff 0%, transparent 55%),
-    radial-gradient(900px 600px at 90% 100%, #ffe9b8 0%, transparent 55%),
-    radial-gradient(800px 600px at 0% 95%, #c8f5e4 0%, transparent 55%),
+    radial-gradient(900px 600px at 90% 100%, #ffdcc2 0%, transparent 55%),
+    radial-gradient(800px 600px at 0% 95%, #e3d9ff 0%, transparent 55%),
     #fff6fb; }
 .hk h1, .hk h2, .hk h3, .hk p { margin: 0; }
 .hk-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; pointer-events: none; z-index: 0; animation: hk-drift 16s ease-in-out infinite alternate; }
 .hk-blob.b1 { width: 340px; height: 340px; background: #ff7ab8; top: 12%; left: -90px; }
 .hk-blob.b2 { width: 300px; height: 300px; background: #7aa8ff; top: 40%; right: -80px; animation-delay: -5s; }
-.hk-blob.b3 { width: 280px; height: 280px; background: #ffd25e; bottom: -80px; left: 30%; animation-delay: -9s; }
+.hk-blob.b3 { width: 280px; height: 280px; background: #ffb27a; bottom: -80px; left: 30%; animation-delay: -9s; }
 .hk-wrap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
 
 /* Üst bar */
@@ -221,11 +221,11 @@ button, input, select { font-family: inherit; }
 .hk-chip i { font-style: normal; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 700; background: linear-gradient(135deg, #3b7bff, #9b5cff); flex-shrink: 0; }
 .hk-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hk-chip.err i { background: linear-gradient(135deg, #ff4d4d, #ff9a3d); }
-.hk-chip.ok i { background: linear-gradient(135deg, #10c98f, #06b6d4); }
+.hk-chip.ok i { background: linear-gradient(135deg, #1ea7fd, #5b7cfa); }
 
 /* Bakiye alanı */
 .hk-hero { display: grid; grid-template-columns: 1.7fr 1fr; gap: 16px; }
-.hk-balance { position: relative; overflow: hidden; border-radius: 30px; padding: 28px 30px; color: #fff; background: linear-gradient(120deg, #7c3aed, #ec4899 45%, #ff7a1a 100%); background-size: 200% 200%; animation: hk-rise .7s cubic-bezier(.2,.8,.2,1) both, hk-flow var(--cyc) ease-in-out infinite; box-shadow: 0 24px 50px rgba(236,72,153,.35); }
+.hk-balance { position: relative; overflow: hidden; border-radius: 30px; padding: 28px 30px; color: #fff; background: linear-gradient(120deg, #7c3aed, #ec4899 45%, #ff7a1a 100%); background-size: 200% 200%; animation: hk-rise .7s cubic-bezier(.2,.8,.2,1) both, hk-flow calc(var(--cyc) * 2) ease-in-out infinite; box-shadow: 0 24px 50px rgba(236,72,153,.35); }
 .hk-balance::before { content: ''; position: absolute; width: 260px; height: 260px; border-radius: 50%; right: -70px; top: -90px; background: rgba(255,255,255,.2); }
 .hk-balance::after { content: ''; position: absolute; width: 180px; height: 180px; border-radius: 50%; right: 60px; bottom: -100px; background: rgba(255,230,120,.35); }
 .hk-balance > * { position: relative; z-index: 1; }
@@ -236,7 +236,7 @@ button, input, select { font-family: inherit; }
 .hk-side { display: grid; grid-template-rows: 1fr 1fr; gap: 16px; }
 .hk-stat { position: relative; overflow: hidden; border-radius: 24px; padding: 18px 20px; color: #fff; display: flex; flex-direction: column; justify-content: center; animation: hk-rise .7s .1s cubic-bezier(.2,.8,.2,1) both; transition: transform .25s, box-shadow .25s; }
 .hk-stat:hover { transform: translateY(-4px) scale(1.02); }
-.hk-stat.in { background: linear-gradient(135deg, #10c98f, #06b6d4); box-shadow: 0 16px 34px rgba(16,201,143,.38); }
+.hk-stat.in { background: linear-gradient(135deg, #1ea7fd, #5b7cfa); box-shadow: 0 16px 34px rgba(30,167,253,.38); }
 .hk-stat.out { background: linear-gradient(135deg, #ff4d8d, #ff9a3d); box-shadow: 0 16px 34px rgba(255,77,141,.38); animation-delay: .2s; }
 .hk-stat::after { content: ''; position: absolute; width: 110px; height: 110px; border-radius: 50%; right: -30px; top: -40px; background: rgba(255,255,255,.22); }
 .hk-stat .lbl { font-size: 12px; font-weight: 500; opacity: .95; display: flex; align-items: center; gap: 6px; }
@@ -253,7 +253,7 @@ button, input, select { font-family: inherit; }
 .hk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .hk-panel { position: relative; overflow: hidden; border-radius: 26px; padding: 22px; min-height: 240px; display: flex; flex-direction: column; background: #fff; box-shadow: 0 14px 38px rgba(80,60,160,.13); animation: hk-rise .6s .15s cubic-bezier(.2,.8,.2,1) both; transition: transform .3s, box-shadow .3s; }
 .hk-panel:hover { transform: translateY(-4px); box-shadow: 0 22px 48px rgba(80,60,160,.2); }
-.hk-panel::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: linear-gradient(90deg, #ff7a1a, #ff4d8d, #9b5cff, #3b7bff, #10c98f); filter: hue-rotate(var(--hk-hue)); }
+.hk-panel::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: linear-gradient(90deg, #ff7a1a, #ff4d8d, #9b5cff, #3b7bff, #22b8f0); filter: hue-rotate(var(--hk-hue)); }
 .hk-panel h3 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
 .hk-empty { font-size: 13px; color: var(--mute); }
 .hk-stack { display: flex; height: 14px; border-radius: 999px; overflow: hidden; margin-bottom: 18px; background: #eee9ff; }
@@ -285,7 +285,7 @@ button, input, select { font-family: inherit; }
 .hk-item-r { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .hk-amt { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; padding: 5px 12px; border-radius: 999px; }
 .hk-amt.out { color: #e11d48; background: #ffe4ec; }
-.hk-amt.in { color: #059669; background: #d9fbe9; }
+.hk-amt.in { color: #0b78d1; background: #dcefff; }
 .hk-icon-btn { background: #f1eeff; border: 0; padding: 7px; border-radius: 10px; cursor: pointer; display: grid; place-items: center; color: #6d4aff; transition: background .15s, transform .15s, color .15s; }
 .hk-icon-btn:hover { background: #6d4aff; color: #fff; transform: scale(1.12); }
 .hk-icon-btn.del { background: #ffe9ee; color: #e11d48; }
@@ -303,8 +303,8 @@ button, input, select { font-family: inherit; }
 /* Alt butonlar */
 .hk-foot { display: flex; flex-wrap: wrap; gap: 10px; padding: 14px 0 130px; }
 .hk-fbtn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 999px; border: 0; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 22px rgba(80,60,160,.22); transition: transform .2s, box-shadow .2s, filter .2s; }
-.hk-fbtn:nth-of-type(1) { background: linear-gradient(135deg, #06b6d4, #3b7bff); }
-.hk-fbtn:nth-of-type(2) { background: linear-gradient(135deg, #10c98f, #84cc16); }
+.hk-fbtn:nth-of-type(1) { background: linear-gradient(135deg, #3b7bff, #6d5cff); }
+.hk-fbtn:nth-of-type(2) { background: linear-gradient(135deg, #14b8d4, #3b9bff); }
 .hk-fbtn:nth-of-type(3) { background: linear-gradient(135deg, #ffb300, #ff7a1a); }
 .hk-fbtn:nth-of-type(4) { background: linear-gradient(135deg, #ff4d8d, #9b5cff); }
 .hk-fbtn:hover { transform: translateY(-3px) scale(1.04); filter: brightness(1.08); box-shadow: 0 16px 30px rgba(80,60,160,.3); }
@@ -321,7 +321,7 @@ button, input, select { font-family: inherit; }
 .hk-overlay { position: fixed; inset: 0; background: rgba(48,26,110,.45); backdrop-filter: blur(6px); display: grid; place-items: center; padding: 16px; z-index: 50; animation: hk-fade .2s both; }
 .hk-overlay.top { z-index: 60; }
 .hk-modal { position: relative; overflow: hidden; width: 100%; max-width: 400px; background: #fff; border-radius: 28px; padding: 28px 24px 24px; box-shadow: 0 30px 70px rgba(48,26,110,.4); animation: hk-pop .3s cubic-bezier(.2,1.2,.3,1) both; color: var(--ink); }
-.hk-modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #ff7a1a, #ff4d8d, #9b5cff, #3b7bff, #10c98f); filter: hue-rotate(var(--hk-hue)); }
+.hk-modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #ff7a1a, #ff4d8d, #9b5cff, #3b7bff, #22b8f0); filter: hue-rotate(var(--hk-hue)); }
 .hk-modal h3 { font-size: 19px; font-weight: 800; margin-bottom: 16px; }
 .hk-dlg-msg { font-size: 14px; line-height: 1.55; margin: 0 0 16px; white-space: pre-line; font-weight: 500; }
 .hk-form { display: flex; flex-direction: column; gap: 13px; }
@@ -329,7 +329,7 @@ button, input, select { font-family: inherit; }
 .hk-type { padding: 12px; border-radius: 14px; border: 2px solid #ece6ff; background: #f7f4ff; color: var(--mute); font-size: 14px; font-weight: 700; cursor: pointer; transition: all .2s; }
 .hk-type:hover { transform: translateY(-2px); }
 .hk-type.on-out { background: linear-gradient(135deg, #ff4d8d, #ff9a3d); border-color: transparent; color: #fff; box-shadow: 0 10px 20px rgba(255,77,141,.35); }
-.hk-type.on-in { background: linear-gradient(135deg, #10c98f, #06b6d4); border-color: transparent; color: #fff; box-shadow: 0 10px 20px rgba(16,201,143,.35); }
+.hk-type.on-in { background: linear-gradient(135deg, #1ea7fd, #5b7cfa); border-color: transparent; color: #fff; box-shadow: 0 10px 20px rgba(30,167,253,.35); }
 .hk-label { display: block; }
 .hk-label span { display: block; font-size: 12px; font-weight: 600; color: var(--mute); margin-bottom: 5px; }
 .hk-input { width: 100%; background: #f7f4ff; border: 2px solid #ece6ff; border-radius: 14px; padding: 11px 14px; font-size: 14px; font-weight: 500; color: var(--ink); outline: none; color-scheme: light; transition: border-color .2s, box-shadow .2s, background .2s; }
@@ -350,8 +350,7 @@ button, input, select { font-family: inherit; }
 @keyframes hk-pulse { 0% { box-shadow: 0 12px 28px rgba(255,77,141,.55), 0 0 0 0 rgba(255,122,26,.5); } 70%,100% { box-shadow: 0 12px 28px rgba(255,77,141,.55), 0 0 0 22px rgba(255,122,26,0); } }
 @keyframes hk-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes hk-pop { from { opacity: 0; transform: scale(.9) translateY(10px); } to { opacity: 1; transform: none; } }
-@keyframes hk-spin { to { --hk-hue: 360deg; } }
-
+@keyframes hk-spin { from { --hk-hue: -28deg; } to { --hk-hue: 28deg; } }
 @media (max-width: 760px) {
   .hk { padding: 18px 14px 40px; }
   .hk-hero { grid-template-columns: 1fr; }
@@ -530,7 +529,7 @@ export default function App() {
 
   // Gökkuşağı renkli günlük çubuklar; üzerine gelinen gün parlar, diğerleri soluklaşır
   const barColor = (c) => {
-    const hue = (c.dataIndex * 11 + 330) % 360;
+    const hue = (340 - c.dataIndex * 4 + 360) % 360;
     const h = hoverIdx.current;
     if (h === null) return `hsl(${hue}, 88%, 60%)`;
     return c.dataIndex === h ? `hsl(${hue}, 95%, 52%)` : `hsla(${hue}, 88%, 60%, 0.3)`;
