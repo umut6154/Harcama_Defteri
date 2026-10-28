@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Pencil, Trash2, Cloud, Download, Upload, CircleDot, Plus, TrendingUp, TrendingDown } from 'lucide-react';
+import { Pencil, Trash2, Cloud, Download, Upload, CircleDot, Plus, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { initializeApp, getApps, getApp } from 'firebase/app';
@@ -212,8 +212,8 @@ button, input, select { font-family: inherit; }
 /* Üst bar */
 .hk-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .hk-brand { display: flex; align-items: center; gap: 12px; }
-.hk-logo { width: 48px; height: 48px; border-radius: 16px; background: linear-gradient(135deg, #ff7a1a, #ff4d8d 55%, #9b5cff); display: grid; place-items: center; font-size: 26px; font-weight: 800; color: #fff; box-shadow: 0 10px 24px rgba(255,77,141,.4); animation: hk-float 3.4s ease-in-out infinite; }
-.hk-title { font-size: 28px; font-weight: 800; letter-spacing: -.01em; background: linear-gradient(90deg, #ff7a1a, #ff4d8d, #9b5cff, #3b7bff, #ff7a1a); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: hk-title 8s linear infinite; }
+.hk-logo { width: 48px; height: 48px; border-radius: 16px; background: linear-gradient(135deg, #ff7a1a, #ff4d8d 55%, #9b5cff); display: grid; place-items: center; font-size: 26px; font-weight: 800; color: #fff; box-shadow: 0 10px 24px rgba(255,77,141,.4); animation: hk-float 3.4s ease-in-out infinite, hk-hue-cycle 8s linear infinite; }
+.hk-title { font-size: 28px; font-weight: 800; letter-spacing: -.01em; background: linear-gradient(90deg, #ff7a1a, #ff4d8d, #9b5cff); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; animation: hk-hue-cycle 8s linear infinite; }
 .hk-sub { font-size: 12.5px; color: var(--mute); margin-top: 1px; }
 .hk-chip { display: inline-flex; align-items: center; gap: 8px; background: #fff; border-radius: 999px; padding: 6px 14px 6px 6px; font-size: 12px; font-weight: 600; color: var(--ink); box-shadow: 0 6px 18px rgba(80,60,160,.12); max-width: 100%; }
 .hk-chip i { font-style: normal; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 700; background: linear-gradient(135deg, #3b7bff, #9b5cff); flex-shrink: 0; }
@@ -243,7 +243,8 @@ button, input, select { font-family: inherit; }
 
 /* Aylık özet */
 .hk-sumhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 10px; }
-.hk-sumhead h2 { font-size: 21px; font-weight: 800; }
+.hk .hk-sumhead h2 { display: flex; align-items: center; gap: 10px; font-size: 25px; font-weight: 800; letter-spacing: -.01em; color: #1f1a4d; -webkit-text-fill-color: #1f1a4d; opacity: 1; text-shadow: 0 2px 0 rgba(255,255,255,.9); }
+.hk .hk-sumhead h2::before { content: ''; width: 8px; height: 28px; border-radius: 99px; background: linear-gradient(180deg, #ff7a1a, #ff4d8d, #9b5cff); animation: hk-hue-cycle 8s linear infinite; }
 .hk-select { background: #fff; color: var(--ink); border: 2px solid transparent; border-radius: 999px; padding: 9px 18px; font-size: 14px; font-weight: 600; cursor: pointer; outline: none; box-shadow: 0 6px 18px rgba(80,60,160,.14); background-image: linear-gradient(#fff, #fff), linear-gradient(90deg, #ff7a1a, #ff4d8d, #9b5cff); background-origin: border-box; background-clip: padding-box, border-box; transition: box-shadow .2s; }
 .hk-select:focus { box-shadow: 0 0 0 4px rgba(155,92,255,.25); }
 
@@ -288,7 +289,14 @@ button, input, select { font-family: inherit; }
 .hk-icon-btn.del { background: #ffe9ee; color: #e11d48; }
 .hk-icon-btn.del:hover { background: #e11d48; color: #fff; }
 .hk-icon-btn svg { width: 15px; height: 15px; }
-.hk-none { font-size: 14px; color: var(--mute); padding: 30px 16px; text-align: center; background: rgba(255,255,255,.7); border-radius: 22px; border: 2px dashed #d8cbff; }
+.hk-none { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: 36px 18px; background: rgba(255,255,255,.78); border-radius: 28px; border: 2px dashed #d8cbff; backdrop-filter: blur(6px); }
+.hk-none-ico { width: 74px; height: 74px; border-radius: 26px; display: grid; place-items: center; color: #fff; margin-bottom: 6px; background: linear-gradient(135deg, #ff7a1a, #ff4d8d 55%, #9b5cff); box-shadow: 0 14px 30px rgba(255,77,141,.38); animation: hk-float 3.4s ease-in-out infinite, hk-hue-cycle 8s linear infinite; }
+.hk-none-ico svg { width: 36px; height: 36px; }
+.hk-none b { font-size: 18px; font-weight: 800; color: var(--ink); }
+.hk-none p { font-size: 13px; color: var(--mute); max-width: 320px; line-height: 1.5; }
+.hk-none button { margin-top: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border: 0; border-radius: 999px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #ff4d8d, #9b5cff); box-shadow: 0 10px 22px rgba(155,92,255,.35); transition: transform .2s, box-shadow .2s; }
+.hk-none button:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 16px 28px rgba(155,92,255,.45); }
+.hk-none button svg { width: 16px; height: 16px; }
 
 /* Alt butonlar */
 .hk-foot { display: flex; flex-wrap: wrap; gap: 10px; padding: 14px 0 130px; }
@@ -342,6 +350,7 @@ button, input, select { font-family: inherit; }
 @keyframes hk-pop { from { opacity: 0; transform: scale(.9) translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes hk-title { to { background-position: 250% 0; } }
 @keyframes hk-hue { to { background-position: 100% 100%; } }
+@keyframes hk-hue-cycle { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
 
 @media (max-width: 760px) {
   .hk { padding: 18px 14px 40px; }
@@ -814,7 +823,14 @@ export default function App() {
         </section>
 
         <section>
-          {grouped.length === 0 && <p className="hk-none">🌈 Bu ay için kayıt yok. Sağ alttaki + ile ekleyebilirsin.</p>}
+          {grouped.length === 0 && (
+            <div className="hk-none">
+              <span className="hk-none-ico"><Wallet /></span>
+              <b>Bu ay için kayıt yok</b>
+              <p>İlk gelir ya da giderini ekleyerek {monthLabel(selectedMonth)} ayını başlat.</p>
+              <button type="button" onClick={openNew}><Plus /> İlk kaydı ekle</button>
+            </div>
+          )}
           {grouped.map((g) => (
             <div key={g.date}>
               <p className="hk-date">{trDate(g.date)} <small>{dayName(g.date)}</small></p>
