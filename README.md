@@ -2,7 +2,7 @@
 
 ## Canlı Site Linki
 
-(https://harcamatablo.netlify.app)
+(https://harcama-defteri.onrender.com)
 
 Açıklama
 
