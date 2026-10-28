@@ -196,7 +196,7 @@ html, body { margin: 0; padding: 0; display: block; width: 100%; max-width: none
 #root { max-width: none; width: 100%; margin: 0; padding: 0; text-align: left; }
 button, input, select { font-family: inherit; }
 
-.hk { --ink: #1f1a4d; --mute: #6b6a93; position: relative; overflow: hidden; min-height: 100vh; color: var(--ink); font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; padding: 26px 18px 40px; --cyc: 14s; animation: hk-spin var(--cyc) ease-in-out infinite alternate; }
+.hk { --ink: #1f1a4d; --mute: #6b6a93; position: relative; overflow: hidden; min-height: 100vh; color: var(--ink); font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; padding: 26px 18px 40px; --cyc: 10s; animation: hk-spin var(--cyc) ease-in-out infinite alternate; }
 .hk-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; filter: hue-rotate(var(--hk-hue));
   background:
     radial-gradient(900px 500px at 8% -5%, #ffd6ec 0%, transparent 60%),
