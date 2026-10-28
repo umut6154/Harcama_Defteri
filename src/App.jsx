@@ -50,6 +50,8 @@ const CATEGORIES = {
     { name: 'Diğer Gelir', icon: '💵' },
   ],
 };
+const CAT_COLORS = { 'Yemek': '#ff8a3d', 'Market': '#34e8a0', 'Yurt/KYK': '#5b8bff', 'Abonelik': '#a05bff', 'Eğlence': '#ff5c8a', 'Kişisel Bakım': '#22d3ee', 'Ulaşım': '#ffc857', 'Diğer': '#9aa0d8', 'Burs/Harçlık': '#34e8a0', 'Maaş': '#22d3ee', 'Diğer Gelir': '#7dffc0' };
+const colorOf = (name) => CAT_COLORS[name] || '#9aa0d8';
 const ALL_CATEGORIES = [...CATEGORIES.gider, ...CATEGORIES.gelir];
 const iconOf = (name) => ALL_CATEGORIES.find((c) => c.name === name)?.icon || '📦';
 const MONTHS_TR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
@@ -218,24 +220,15 @@ button, input, select { font-family: inherit; }
 .hk-cat-top span:last-child { font-weight: 600; }
 .hk-bar { margin-top: 7px; height: 9px; border-radius: 999px; background: #1f2347; overflow: hidden; }
 .hk-bar > i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #5b63ff, #8f7bff); transform-origin: left; animation: hk-grow .9s cubic-bezier(.2,.8,.2,1) both; }
-.hk-cat:nth-child(8n+3) .hk-bar > i { background: linear-gradient(90deg, #12b5d6, #4de8f5); }
-.hk-cat:nth-child(8n+4) .hk-bar > i { background: linear-gradient(90deg, #ff4f86, #ff8fb0); }
-.hk-cat:nth-child(8n+5) .hk-bar > i { background: linear-gradient(90deg, #ffa62b, #ffd36b); }
-.hk-cat:nth-child(8n+6) .hk-bar > i { background: linear-gradient(90deg, #1fcf8a, #6cf2bd); }
-.hk-cat:nth-child(8n+7) .hk-bar > i { background: linear-gradient(90deg, #9a4dff, #c89bff); }
-.hk-cat:nth-child(8n+8) .hk-bar > i { background: linear-gradient(90deg, #ff6a3d, #ffa07a); }
-.hk-cat:nth-child(8n+9) .hk-bar > i { background: linear-gradient(90deg, #3d8bff, #8dbdff); }
 .hk-chart { flex: 1; min-height: 140px; position: relative; }
 
 .hk-date { font-size: 12px; font-weight: 600; color: #8d92c4; margin: 18px 0 8px 4px; }
 .hk-list { display: flex; flex-direction: column; gap: 8px; }
 .hk-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #141731; border: 1px solid #25294d; border-left: 3px solid #ff5c8a; border-radius: 14px; padding: 10px 14px; animation: hk-slide .45s cubic-bezier(.2,.8,.2,1) both; transition: transform .2s, background .2s, border-color .2s; }
-.hk-item:has(.hk-amt.in) { border-left-color: #34e8a0; }
 .hk-item:nth-child(2) { animation-delay: .05s; } .hk-item:nth-child(3) { animation-delay: .1s; } .hk-item:nth-child(4) { animation-delay: .15s; } .hk-item:nth-child(n+5) { animation-delay: .2s; }
 .hk-item:hover { transform: translateX(4px); background: #1a1e40; border-color: #3b4087; border-left-color: inherit; }
 .hk-item-l { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .hk-ico { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,92,138,.16); display: grid; place-items: center; font-size: 17px; flex-shrink: 0; transition: transform .25s; }
-.hk-item:has(.hk-amt.in) .hk-ico { background: rgba(52,232,160,.16); }
 .hk-item:hover .hk-ico { transform: scale(1.12) rotate(-6deg); }
 .hk-item-t { min-width: 0; }
 .hk-item-t b { display: block; font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -305,7 +298,70 @@ button, input, select { font-family: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .hk *, .hk::before, .hk::after { animation: none !important; transition: none !important; }
 }
+/* ===== Renk paleti ve ek animasyonlar ===== */
+.hk { background-image: radial-gradient(900px 520px at 88% 0%, rgba(255,92,138,.11), transparent 60%), radial-gradient(800px 520px at 0% 100%, rgba(34,211,238,.09), transparent 60%); }
+.hk-title { background: linear-gradient(90deg, #fff, #9fb4ff, #5fe3f5, #ffb36b, #ff7aa8, #fff); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: hk-title 9s linear infinite; }
+.hk-sumhead h2 { background: linear-gradient(90deg, #ffc857, #ff5c8a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hk-balance .row > div:first-child { background: rgba(52,232,160,.22); border-color: rgba(125,255,192,.4); }
+.hk-balance .row > div:last-child { background: rgba(255,92,138,.24); border-color: rgba(255,179,198,.4); }
+.hk-balance .row > div { transition: transform .25s; }
+.hk-balance .row > div:hover { transform: translateY(-3px) scale(1.03); }
+.hk-balance .big, .hk-amt { font-variant-numeric: tabular-nums; }
+
+.hk-grid > .hk-panel:nth-child(1) { border-top: 3px solid #a05bff; background: linear-gradient(160deg, #271b52, #121530 70%); }
+.hk-grid > .hk-panel:nth-child(1) h3 { color: #cdb0ff; }
+.hk-grid > .hk-panel:nth-child(2) { border-top: 3px solid #22d3ee; background: linear-gradient(160deg, #0d2e3e, #121530 70%); animation-delay: .24s; }
+.hk-grid > .hk-panel:nth-child(2) h3 { color: #7eeaf7; }
+
+.hk-bar { background: rgba(255,255,255,.07); }
+.hk-bar > i { position: relative; background: linear-gradient(90deg, var(--c, #7c83ff), color-mix(in srgb, var(--c, #7c83ff) 55%, #fff)); box-shadow: 0 0 12px color-mix(in srgb, var(--c, #7c83ff) 55%, transparent); }
+.hk-bar > i::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.5) 50%, transparent 70%); background-size: 220% 100%; animation: hk-sweep 2.8s linear infinite; }
+.hk-cat-top span:first-child { transition: transform .2s; }
+.hk-cat:hover .hk-cat-top span:first-child { transform: translateX(4px); color: var(--c); }
+
+.hk-date { display: inline-block; background: rgba(34,211,238,.12); color: #7eeaf7; border: 1px solid rgba(34,211,238,.25); padding: 3px 12px; border-radius: 999px; margin: 18px 0 8px 2px; }
+.hk-item { border-left-color: var(--c, #ff5c8a); }
+.hk-item:hover { border-color: color-mix(in srgb, var(--c, #7c83ff) 55%, #25294d); border-left-color: var(--c, #ff5c8a); box-shadow: 0 8px 26px color-mix(in srgb, var(--c, #7c83ff) 25%, transparent); }
+.hk-ico { background: color-mix(in srgb, var(--c, #ff5c8a) 22%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c, #ff5c8a) 40%, transparent); }
+.hk-item:hover .hk-ico { transform: scale(1.15) rotate(-8deg); }
+
+.hk-fbtn:nth-of-type(1) { --b: #22d3ee; } .hk-fbtn:nth-of-type(2) { --b: #34e8a0; } .hk-fbtn:nth-of-type(3) { --b: #ffc857; } .hk-fbtn:nth-of-type(4) { --b: #ff5c8a; }
+.hk-fbtn { border-color: color-mix(in srgb, var(--b, #2d3260) 40%, #2d3260); }
+.hk-fbtn svg { color: var(--b, #22d3ee); transition: transform .3s; }
+.hk-fbtn:hover { border-color: var(--b); background: color-mix(in srgb, var(--b) 14%, #151833); box-shadow: 0 8px 22px color-mix(in srgb, var(--b) 25%, transparent); }
+.hk-fbtn:hover svg { transform: scale(1.25) rotate(-10deg); }
+
+.hk-fab { background: linear-gradient(135deg, #5b63ff, #a05bff, #ff5c8a); background-size: 200% 200%; animation: hk-pulse 2.8s ease-out infinite, hk-hue 5s ease-in-out infinite alternate; }
+.hk-modal { position: relative; overflow: hidden; }
+.hk-modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #22d3ee, #a05bff, #ff5c8a, #ffc857); background-size: 200% 100%; animation: hk-title 5s linear infinite; }
+.hk-select:hover { border-color: #ff5c8a; }
+
+@keyframes hk-title { to { background-position: 250% 0; } }
+@keyframes hk-sweep { from { background-position: 220% 0; } to { background-position: -120% 0; } }
+@keyframes hk-hue { to { background-position: 100% 100%; } }
+@media (prefers-reduced-motion: reduce) { .hk *::before, .hk *::after { animation: none !important; } }
 `;
+
+/* Sayılar değişirken yumuşakça sayar */
+const CountUp = ({ value, format }) => {
+  const [v, setV] = useState(0);
+  const from = useRef(0);
+  useEffect(() => {
+    const a = from.current, b = value, t0 = performance.now();
+    if (a === b) return;
+    let raf;
+    const step = (t) => {
+      const p = Math.min((t - t0) / 800, 1);
+      const cur = a + (b - a) * (1 - Math.pow(1 - p, 3));
+      from.current = cur;
+      setV(cur);
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [value]);
+  return <>{format(v)}</>;
+};
 
 /* ---------- Uygulama ---------- */
 export default function App() {
@@ -650,15 +706,15 @@ export default function App() {
 
         <section className="hk-balance">
           <p className="lbl">Güncel bakiye</p>
-          <div className="big">{fmt2(currentBalance)} ₺</div>
+          <div className="big"><CountUp value={currentBalance} format={fmt2} /> ₺</div>
           <div className="row">
             <div>
               <p className="lbl">Bu ay gelen</p>
-              <b>{fmt(monthlyIncome)} ₺</b>
+              <b><CountUp value={monthlyIncome} format={fmt} /> ₺</b>
             </div>
             <div>
               <p className="lbl">Bu ay harcanan</p>
-              <b>{fmt(monthlyExpense)} ₺</b>
+              <b><CountUp value={monthlyExpense} format={fmt} /> ₺</b>
             </div>
           </div>
         </section>
@@ -680,7 +736,7 @@ export default function App() {
                 <p className="hk-empty">Bu ay henüz harcama yok.</p>
               ) : (
                 categoryExpenses.map(([cat, val]) => (
-                  <div className="hk-cat" key={cat}>
+                  <div className="hk-cat" key={cat} style={{ '--c': colorOf(cat) }}>
                     <div className="hk-cat-top">
                       <span>{iconOf(cat)} {cat}</span>
                       <span>{fmt(val)} ₺</span>
@@ -709,7 +765,7 @@ export default function App() {
                 {g.items.map((item) => {
                   const income = item.type === 'gelir';
                   return (
-                    <div className="hk-item" key={item.id}>
+                    <div className="hk-item" key={item.id} style={{ '--c': colorOf(item.category) }}>
                       <div className="hk-item-l">
                         <span className="hk-ico">{iconOf(item.category)}</span>
                         <div className="hk-item-t">
