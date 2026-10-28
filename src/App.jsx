@@ -334,7 +334,7 @@ button, input, select { font-family: inherit; }
 .hk-dlg-msg { font-size: 14px; line-height: 1.55; margin: 0 0 16px; white-space: pre-line; font-weight: 500; }
 .hk-form { display: flex; flex-direction: column; gap: 13px; }
 .hk-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.hk-type { padding: 12px; border-radius: 14px; border: 2px solid #ece6ff; background: #f7f4ff; color: var(--mute); font-size: 14px; font-weight: 700; cursor: pointer; transition: all .2s; }
+.hk-type { padding: 12px; border-radius: 14px; border: 2px solid #ece6ff; background: #f7f4ff; color: var(--mute); font-size: 14px; font-weight: 700; cursor: pointer; transition: transform .2s, border-color .2s, box-shadow .2s, color .2s, background-color .2s; }
 .hk-type:hover { transform: translateY(-2px); }
 .hk-type.on-out { background: linear-gradient(135deg, var(--d3), var(--d2)); border-color: transparent; color: #fff; box-shadow: 0 10px 20px color-mix(in srgb, var(--d3) 38%, transparent); }
 .hk-type.on-in { background: linear-gradient(135deg, var(--d1), var(--d2)); border-color: transparent; color: #fff; box-shadow: 0 10px 20px color-mix(in srgb, var(--d1) 38%, transparent); }
@@ -343,7 +343,7 @@ button, input, select { font-family: inherit; }
 .hk-input { width: 100%; background: #f7f4ff; border: 2px solid #ece6ff; border-radius: 14px; padding: 11px 14px; font-size: 14px; font-weight: 500; color: var(--ink); outline: none; color-scheme: light; transition: border-color .2s, box-shadow .2s, background .2s; }
 .hk-input::placeholder { color: #aaa6d0; }
 .hk-input:focus { border-color: #9b5cff; background: #fff; box-shadow: 0 0 0 4px rgba(155,92,255,.18); }
-.hk-cancel, .hk-save { padding: 12px; border-radius: 14px; border: 0; font-size: 14px; font-weight: 700; cursor: pointer; transition: transform .15s, box-shadow .2s, background .2s; }
+.hk-cancel, .hk-save { padding: 12px; border-radius: 14px; border: 0; font-size: 14px; font-weight: 700; cursor: pointer; transition: transform .15s, box-shadow .2s, background-color .2s; }
 .hk-cancel { background: #f1eeff; color: #5b3df0; }
 .hk-cancel:hover { background: #e6e0ff; }
 .hk-save { color: #fff; background: linear-gradient(135deg, var(--d2), var(--d3)); box-shadow: 0 10px 22px rgba(155,92,255,.35); }
