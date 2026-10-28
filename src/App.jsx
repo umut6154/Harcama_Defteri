@@ -244,7 +244,7 @@ button, input, select { font-family: inherit; }
 .hk-stat.in { background: linear-gradient(135deg, var(--d1), var(--d2)); box-shadow: 0 16px 34px color-mix(in srgb, var(--d1) 40%, transparent); }
 .hk-stat.out { background: linear-gradient(135deg, var(--d3), var(--d2)); box-shadow: 0 16px 34px color-mix(in srgb, var(--d3) 40%, transparent); animation-delay: .2s; }
 .hk-stat::after { content: ''; position: absolute; width: 110px; height: 110px; border-radius: 50%; right: -30px; top: -40px; background: rgba(255,255,255,.22); }
-.hk-stat .lbl { font-size: 12px; font-weight: 500; opacity: .95; display: flex; align-items: center; gap: 6px; }
+.hk-stat .lbl { font-size: 12px; font-weight: 500; opacity: .95; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .hk-stat .lbl svg { width: 15px; height: 15px; }
 .hk-stat b { margin-top: 4px; font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; position: relative; z-index: 1; }
 
@@ -370,6 +370,8 @@ button, input, select { font-family: inherit; }
   .hk-balance { padding: 24px 22px; }
   .hk-balance .big { font-size: 38px; }
   .hk-stat b { font-size: 19px; }
+  .hk-stat { padding: 18px 14px; }
+  .hk-stat .lbl { font-size: 11.5px; gap: 4px; }
   .hk-fab { right: 18px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) {
