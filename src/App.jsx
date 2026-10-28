@@ -175,98 +175,135 @@ const normalizeBackup = (parsed) => {
 /* ---------- Stil (Tailwind GEREKMEZ, tamamen bu dosyada) ---------- */
 const CSS = `
 *, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; display: block; width: 100%; max-width: none; min-width: 0; background: #0c0d19; text-align: left; }
+html, body { margin: 0; padding: 0; display: block; width: 100%; max-width: none; min-width: 0; background: #0b0c1a; text-align: left; }
 #root { max-width: none; width: 100%; margin: 0; padding: 0; text-align: left; }
 button, input, select { font-family: inherit; }
-.hk { text-align: left; min-height: 100vh; background: #0c0d19; color: #e8e9f5; font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif; padding: 28px 20px 40px; }
-.hk-wrap { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.hk { position: relative; overflow: hidden; text-align: left; min-height: 100vh; background: #0b0c1a; color: #e8e9f5; font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif; padding: 28px 20px 40px; }
+.hk::before, .hk::after { content: ''; position: fixed; width: 520px; height: 520px; border-radius: 50%; filter: blur(110px); opacity: .22; pointer-events: none; z-index: 0; animation: hk-drift 22s ease-in-out infinite alternate; }
+.hk::before { top: -160px; left: -120px; background: #6a5cff; }
+.hk::after { bottom: -200px; right: -140px; background: #12c8e8; animation-delay: -9s; }
+.hk-wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
 .hk h1, .hk h2, .hk h3, .hk p { margin: 0; }
 
 .hk-head { display: flex; flex-direction: column; gap: 2px; }
-.hk-brand { display: flex; align-items: center; gap: 10px; }
-.hk-logo { width: 32px; height: 32px; border-radius: 9px; background: #2a1f1a; display: grid; place-items: center; font-size: 18px; }
-.hk-title { font-size: 26px; font-weight: 800; letter-spacing: -0.01em; color: #fff; }
-.hk-sub { font-size: 13px; color: #8d90ad; }
-.hk-user { font-size: 12px; color: #6f7291; }
+.hk-brand { display: flex; align-items: center; gap: 12px; }
+.hk-logo { width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, #5b63ff, #a05bff); display: grid; place-items: center; font-size: 22px; font-weight: 800; color: #fff; box-shadow: 0 6px 20px rgba(124,92,255,.5); animation: hk-float 3.6s ease-in-out infinite; }
+.hk-title { font-size: 28px; font-weight: 800; letter-spacing: -0.01em; background: linear-gradient(90deg, #fff 30%, #9fb4ff 70%, #5fe3f5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hk-sub { font-size: 13px; color: #9a9dc0; }
+.hk-user { font-size: 12px; color: #7f83a8; }
 
-.hk-balance { border-radius: 24px; padding: 24px 26px; background: linear-gradient(90deg, #5b63ff 0%, #8b4fff 100%); box-shadow: 0 14px 40px rgba(91,99,255,.25); }
-.hk-balance .lbl { font-size: 13px; color: rgba(255,255,255,.82); }
-.hk-balance .big { margin-top: 4px; font-size: 46px; line-height: 1.1; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
-.hk-balance .row { margin-top: 16px; display: flex; gap: 36px; flex-wrap: wrap; }
+.hk-balance { position: relative; overflow: hidden; border-radius: 26px; padding: 26px 28px; background: linear-gradient(110deg, #4f5bff, #8b4fff, #c24bff, #4f5bff); background-size: 300% 100%; animation: hk-rise .7s cubic-bezier(.2,.8,.2,1) both, hk-flow 14s linear infinite; box-shadow: 0 18px 48px rgba(110,80,255,.38); }
+.hk-balance::after { content: ''; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.22), transparent); transform: skewX(-18deg); animation: hk-shine 1.4s .5s ease-out 1 both; }
+.hk-balance .lbl { font-size: 13px; color: rgba(255,255,255,.85); }
+.hk-balance .big { margin-top: 4px; font-size: 48px; line-height: 1.1; font-weight: 800; color: #fff; letter-spacing: -0.02em; text-shadow: 0 4px 24px rgba(0,0,0,.25); }
+.hk-balance .row { margin-top: 18px; display: flex; gap: 12px; flex-wrap: wrap; }
+.hk-balance .row > div { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(6px); border-radius: 16px; padding: 10px 16px; min-width: 150px; }
 .hk-balance .row b { display: block; font-size: 18px; font-weight: 700; color: #fff; }
+.hk-balance .row > div:first-child b::before { content: '▲ '; font-size: 11px; color: #7dffc0; }
+.hk-balance .row > div:last-child b::before { content: '▼ '; font-size: 11px; color: #ffb3c6; }
 
 .hk-sumhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .hk-sumhead h2 { font-size: 18px; font-weight: 700; color: #fff; }
-.hk-select { background: #0c0d19; color: #fff; border: 1px solid #cfd2e6; border-radius: 8px; padding: 6px 12px; font-size: 14px; cursor: pointer; outline: none; }
-.hk-select:focus { box-shadow: 0 0 0 2px #7478ff; }
+.hk-select { background: #151833; color: #fff; border: 1px solid #3a3f73; border-radius: 10px; padding: 7px 14px; font-size: 14px; cursor: pointer; outline: none; transition: border-color .2s, box-shadow .2s; }
+.hk-select:hover { border-color: #22d3ee; }
+.hk-select:focus { box-shadow: 0 0 0 3px rgba(34,211,238,.35); }
 
-.hk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.hk-panel { background: #141628; border: 1px solid #23263f; border-radius: 16px; padding: 16px; min-height: 210px; display: flex; flex-direction: column; }
-.hk-panel h3 { font-size: 14px; font-weight: 500; color: #8d90ad; margin-bottom: 14px; }
-.hk-empty { font-size: 12px; color: #6f7291; }
+.hk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.hk-panel { background: linear-gradient(160deg, #181b3a, #121530); border: 1px solid #292d57; border-radius: 18px; padding: 18px; min-height: 210px; display: flex; flex-direction: column; animation: hk-rise .6s .12s cubic-bezier(.2,.8,.2,1) both; transition: border-color .25s, transform .25s; }
+.hk-panel:hover { border-color: #4a50a0; transform: translateY(-2px); }
+.hk-panel h3 { font-size: 14px; font-weight: 600; color: #a9adcf; margin-bottom: 14px; }
+.hk-empty { font-size: 12px; color: #7f83a8; }
 .hk-cat { margin-bottom: 14px; }
 .hk-cat-top { display: flex; justify-content: space-between; font-size: 14px; color: #f1f2fb; }
-.hk-cat-top span:last-child { font-weight: 500; }
-.hk-bar { margin-top: 7px; height: 8px; border-radius: 999px; background: #1f2240; overflow: hidden; }
-.hk-bar > i { display: block; height: 100%; border-radius: 999px; background: #7478ff; }
+.hk-cat-top span:last-child { font-weight: 600; }
+.hk-bar { margin-top: 7px; height: 9px; border-radius: 999px; background: #1f2347; overflow: hidden; }
+.hk-bar > i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #5b63ff, #8f7bff); transform-origin: left; animation: hk-grow .9s cubic-bezier(.2,.8,.2,1) both; }
+.hk-cat:nth-child(8n+3) .hk-bar > i { background: linear-gradient(90deg, #12b5d6, #4de8f5); }
+.hk-cat:nth-child(8n+4) .hk-bar > i { background: linear-gradient(90deg, #ff4f86, #ff8fb0); }
+.hk-cat:nth-child(8n+5) .hk-bar > i { background: linear-gradient(90deg, #ffa62b, #ffd36b); }
+.hk-cat:nth-child(8n+6) .hk-bar > i { background: linear-gradient(90deg, #1fcf8a, #6cf2bd); }
+.hk-cat:nth-child(8n+7) .hk-bar > i { background: linear-gradient(90deg, #9a4dff, #c89bff); }
+.hk-cat:nth-child(8n+8) .hk-bar > i { background: linear-gradient(90deg, #ff6a3d, #ffa07a); }
+.hk-cat:nth-child(8n+9) .hk-bar > i { background: linear-gradient(90deg, #3d8bff, #8dbdff); }
 .hk-chart { flex: 1; min-height: 140px; position: relative; }
 
-.hk-date { font-size: 11px; color: #6f7291; margin: 16px 0 7px 4px; }
+.hk-date { font-size: 12px; font-weight: 600; color: #8d92c4; margin: 18px 0 8px 4px; }
 .hk-list { display: flex; flex-direction: column; gap: 8px; }
-.hk-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #141628; border: 1px solid #23263f; border-radius: 12px; padding: 10px 14px; }
+.hk-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #141731; border: 1px solid #25294d; border-left: 3px solid #ff5c8a; border-radius: 14px; padding: 10px 14px; animation: hk-slide .45s cubic-bezier(.2,.8,.2,1) both; transition: transform .2s, background .2s, border-color .2s; }
+.hk-item:has(.hk-amt.in) { border-left-color: #34e8a0; }
+.hk-item:nth-child(2) { animation-delay: .05s; } .hk-item:nth-child(3) { animation-delay: .1s; } .hk-item:nth-child(4) { animation-delay: .15s; } .hk-item:nth-child(n+5) { animation-delay: .2s; }
+.hk-item:hover { transform: translateX(4px); background: #1a1e40; border-color: #3b4087; border-left-color: inherit; }
 .hk-item-l { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.hk-ico { width: 36px; height: 36px; border-radius: 10px; background: #1e2140; display: grid; place-items: center; font-size: 16px; flex-shrink: 0; }
+.hk-ico { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,92,138,.16); display: grid; place-items: center; font-size: 17px; flex-shrink: 0; transition: transform .25s; }
+.hk-item:has(.hk-amt.in) .hk-ico { background: rgba(52,232,160,.16); }
+.hk-item:hover .hk-ico { transform: scale(1.12) rotate(-6deg); }
 .hk-item-t { min-width: 0; }
 .hk-item-t b { display: block; font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.hk-item-t small { display: block; font-size: 11px; color: #6f7291; margin-top: 1px; }
+.hk-item-t small { display: block; font-size: 11px; color: #8d92c4; margin-top: 1px; }
 .hk-item-r { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 .hk-amt { font-size: 14px; font-weight: 700; }
-.hk-amt.out { color: #ff4d6d; }
-.hk-amt.in { color: #3ddc84; }
-.hk-icon-btn { background: none; border: 0; padding: 2px; cursor: pointer; display: grid; place-items: center; color: #9a9db8; transition: color .15s; }
-.hk-icon-btn:hover { color: #fff; }
-.hk-icon-btn.del { color: #5b64d6; }
-.hk-icon-btn.del:hover { color: #ff4d6d; }
+.hk-amt.out { color: #ff6b93; }
+.hk-amt.in { color: #34e8a0; }
+.hk-icon-btn { background: none; border: 0; padding: 4px; border-radius: 8px; cursor: pointer; display: grid; place-items: center; color: #8d92c4; transition: color .15s, background .15s, transform .15s; }
+.hk-icon-btn:hover { color: #22d3ee; background: rgba(34,211,238,.12); transform: scale(1.15); }
+.hk-icon-btn.del { color: #8d92c4; }
+.hk-icon-btn.del:hover { color: #ff5c8a; background: rgba(255,92,138,.14); }
 .hk-icon-btn svg { width: 15px; height: 15px; }
-.hk-none { font-size: 13px; color: #6f7291; padding: 18px 0; }
+.hk-none { font-size: 13px; color: #8d92c4; padding: 18px 0; }
 
 .hk-foot { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 0 130px; }
-.hk-fbtn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 12px; border: 1px solid #262a47; background: #141628; color: #e8e9f5; font-size: 12px; cursor: pointer; transition: background .15s; }
-.hk-fbtn:hover { background: #1c1f38; }
-.hk-fbtn svg { width: 14px; height: 14px; }
+.hk-fbtn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 12px; border: 1px solid #2d3260; background: #151833; color: #e8e9f5; font-size: 12px; cursor: pointer; transition: background .2s, border-color .2s, transform .2s, box-shadow .2s; }
+.hk-fbtn:hover { background: #1c2048; border-color: #22d3ee; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(34,211,238,.15); }
+.hk-fbtn svg { width: 14px; height: 14px; color: #22d3ee; }
 .hk-file { display: none; }
 
-.hk-fab { position: fixed; right: 32px; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); width: 48px; height: 48px; border-radius: 50%; border: 0; background: #7478ff; color: #fff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 8px 24px rgba(116,120,255,.45); transition: transform .12s, background .15s; z-index: 20; }
-.hk-fab:hover { background: #8c90ff; }
+.hk-fab { position: fixed; right: 32px; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); width: 54px; height: 54px; border-radius: 50%; border: 0; background: linear-gradient(135deg, #5b63ff, #a05bff); color: #fff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 10px 28px rgba(124,92,255,.55); transition: transform .2s; z-index: 20; animation: hk-pulse 2.8s ease-out infinite; }
+.hk-fab:hover { transform: rotate(90deg) scale(1.08); }
 .hk-fab:active { transform: scale(.9); }
-.hk-fab svg { width: 24px; height: 24px; }
+.hk-fab svg { width: 26px; height: 26px; }
 
-.hk-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: grid; place-items: center; padding: 16px; z-index: 50; }
-.hk-modal { width: 100%; max-width: 380px; background: #12142a; border: 1px solid #262a47; border-radius: 16px; padding: 20px; box-shadow: 0 24px 60px rgba(0,0,0,.6); }
+.hk-overlay { position: fixed; inset: 0; background: rgba(5,6,16,.72); backdrop-filter: blur(4px); display: grid; place-items: center; padding: 16px; z-index: 50; animation: hk-fade .2s both; }
+.hk-modal { width: 100%; max-width: 380px; background: linear-gradient(160deg, #1a1d40, #12142a); border: 1px solid #333873; border-radius: 20px; padding: 22px; box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 40px rgba(124,92,255,.18); animation: hk-pop .3s cubic-bezier(.2,1.2,.3,1) both; }
 .hk-modal h3 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; }
 .hk-overlay.top { z-index: 60; }
 .hk-dlg-msg { font-size: 14px; line-height: 1.5; color: #e8e9f5; margin: 0 0 14px; white-space: pre-line; }
 .hk-form { display: flex; flex-direction: column; gap: 12px; }
 .hk-two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.hk-type { padding: 10px; border-radius: 12px; border: 0; background: #1c1f38; color: #e8e9f5; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s; }
-.hk-type.on-out { background: #ff4d6d; color: #fff; }
-.hk-type.on-in { background: #4af28f; color: #06210f; }
+.hk-type { padding: 10px; border-radius: 12px; border: 0; background: #20244a; color: #e8e9f5; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .2s, transform .15s; }
+.hk-type:hover { transform: translateY(-1px); }
+.hk-type.on-out { background: linear-gradient(135deg, #ff4f86, #ff7a6b); color: #fff; }
+.hk-type.on-in { background: linear-gradient(135deg, #2ee89a, #5bf0c8); color: #06210f; }
 .hk-label { display: block; }
-.hk-label span { display: block; font-size: 11px; color: #8d90ad; margin-bottom: 4px; }
-.hk-input { width: 100%; background: #1c1f38; border: 1px solid #2a2e4f; border-radius: 12px; padding: 10px 14px; font-size: 14px; color: #fff; outline: none; color-scheme: dark; }
-.hk-input::placeholder { color: #5f6382; }
-.hk-input:focus { border-color: #7478ff; }
-.hk-cancel, .hk-save { padding: 10px; border-radius: 12px; border: 0; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s; }
-.hk-cancel { background: #1c1f38; color: #e8e9f5; }
-.hk-cancel:hover { background: #252949; }
-.hk-save { background: #7478ff; color: #fff; }
-.hk-save:hover { background: #8c90ff; }
+.hk-label span { display: block; font-size: 11px; color: #9a9dc0; margin-bottom: 4px; }
+.hk-input { width: 100%; background: #1c1f42; border: 1px solid #30356a; border-radius: 12px; padding: 10px 14px; font-size: 14px; color: #fff; outline: none; color-scheme: dark; transition: border-color .2s, box-shadow .2s; }
+.hk-input::placeholder { color: #666b95; }
+.hk-input:focus { border-color: #22d3ee; box-shadow: 0 0 0 3px rgba(34,211,238,.22); }
+.hk-cancel, .hk-save { padding: 10px; border-radius: 12px; border: 0; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s; }
+.hk-cancel { background: #20244a; color: #e8e9f5; }
+.hk-cancel:hover { background: #2a2f5c; }
+.hk-save { background: linear-gradient(135deg, #5b63ff, #a05bff); color: #fff; }
+.hk-save:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(124,92,255,.45); }
+
+@keyframes hk-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes hk-slide { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+@keyframes hk-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes hk-flow { to { background-position: 300% 0; } }
+@keyframes hk-shine { to { left: 130%; } }
+@keyframes hk-float { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-4px) rotate(-4deg); } }
+@keyframes hk-drift { to { transform: translate(60px, 40px) scale(1.15); } }
+@keyframes hk-pulse { 0% { box-shadow: 0 10px 28px rgba(124,92,255,.55), 0 0 0 0 rgba(124,92,255,.5); } 70%,100% { box-shadow: 0 10px 28px rgba(124,92,255,.55), 0 0 0 18px rgba(124,92,255,0); } }
+@keyframes hk-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hk-pop { from { opacity: 0; transform: scale(.9) translateY(10px); } to { opacity: 1; transform: none; } }
 
 @media (max-width: 720px) {
   .hk { padding: 20px 14px 40px; }
   .hk-grid { grid-template-columns: 1fr; }
-  .hk-balance .big { font-size: 36px; }
+  .hk-balance .big { font-size: 38px; }
+  .hk-balance .row > div { flex: 1; min-width: 130px; }
   .hk-fab { right: 18px; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hk *, .hk::before, .hk::after { animation: none !important; transition: none !important; }
 }
 `;
 
@@ -288,6 +325,7 @@ export default function App() {
   const [date, setDate] = useState(todayStr());
   const [description, setDescription] = useState('');
   const fileRef = useRef(null);
+  const hoverIdx = useRef(null); // grafikte üzerine gelinen/dokunulan gün
 
   // Uygulamanın kendi pencereleri (tarayıcının alert/confirm/prompt kutuları engellenebildiği için)
   const [dlg, setDlg] = useState(null); // { kind: 'alert'|'confirm'|'prompt', message, value, resolve }
@@ -301,6 +339,18 @@ export default function App() {
   const uiPrompt = (message, value = '') => ask({ kind: 'prompt', message, value: String(value) });
 
   useEffect(() => localStorage.setItem('hk_transactions', JSON.stringify(transactions)), [transactions]);
+  // Tarayıcı sekmesi simgesi + tema rengi (uygulama renkleriyle uyumlu)
+  useEffect(() => {
+    const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#5b63ff'/><stop offset='1' stop-color='#a05bff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(#g)'/><text x='32' y='45' font-size='38' font-weight='800' text-anchor='middle' fill='#fff' font-family='Segoe UI,Arial,sans-serif'>₺</text><circle cx='51' cy='13' r='5' fill='#22d3ee'/></svg>";
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+    link.type = 'image/svg+xml';
+    link.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
+    let meta = document.querySelector("meta[name='theme-color']");
+    if (!meta) { meta = document.createElement('meta'); meta.name = 'theme-color'; document.head.appendChild(meta); }
+    meta.content = '#0b0c1a';
+    document.title = 'Hesap Kitap';
+  }, []);
   useEffect(() => localStorage.setItem('hk_initial_balance', String(initialBalance)), [initialBalance]);
   // Firebase oturumunu dinle (sayfa yenilenince giriş korunur)
   useEffect(() => {
@@ -386,6 +436,13 @@ export default function App() {
     return Object.entries(map).sort((a, b) => b[1] - a[1]);
   }, [monthly]);
 
+  const barColor = (c) => {
+    const h = hoverIdx.current;
+    if (h === null) return '#7c83ff';
+    return c.dataIndex === h ? '#22d3ee' : 'rgba(124,131,255,0.25)';
+  };
+  const barBorder = (c) => (hoverIdx.current !== null && c.dataIndex === hoverIdx.current ? '#ffffff' : 'rgba(0,0,0,0)');
+
   const chartData = useMemo(() => {
     const [y, m] = selectedMonth.split('-').map(Number);
     const days = new Date(y, m, 0).getDate();
@@ -395,14 +452,49 @@ export default function App() {
     });
     return {
       labels: totals.map((_, i) => `${i + 1}. gün`),
-      datasets: [{ data: totals, backgroundColor: '#6e74ff', hoverBackgroundColor: '#9aa0ff', borderRadius: 2, barPercentage: 0.55, categoryPercentage: 1, minBarLength: 2 }],
+      datasets: [
+        {
+          data: totals,
+          // Seçili gün parlak pembe-kırmızı + beyaz çerçeve, diğerleri soluklaşır
+          backgroundColor: barColor,
+          hoverBackgroundColor: barColor,
+          borderColor: barBorder,
+          hoverBorderColor: barBorder,
+          borderWidth: 2,
+          borderRadius: 3,
+          barPercentage: 0.6,
+          categoryPercentage: 1,
+          minBarLength: 2,
+        },
+      ],
     };
   }, [monthly, selectedMonth]);
 
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => ` ${fmt(c.parsed.y)} ₺` } } },
+    animation: { duration: 700, easing: 'easeOutQuart' },
+    interaction: { mode: 'index', intersect: false }, // ince/kısa çubuklarda bile sütunun herhangi bir yeri seçer
+    onHover: (_e, els, chart) => {
+      const idx = els.length ? els[0].index : null;
+      if (idx !== hoverIdx.current) {
+        hoverIdx.current = idx;
+        chart.update('none');
+      }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1b1e45',
+        borderColor: '#22d3ee',
+        borderWidth: 1,
+        padding: 10,
+        callbacks: {
+          label: (c) => ` ${fmt(c.parsed.y)} ₺`,
+          labelColor: () => ({ borderColor: '#ffffff', backgroundColor: '#22d3ee' }),
+        },
+      },
+    },
     scales: { x: { display: false }, y: { display: false, beginAtZero: true } },
   };
 
@@ -542,7 +634,7 @@ export default function App() {
       <div className="hk-wrap">
         <header className="hk-head">
           <div className="hk-brand">
-            <span className="hk-logo">💰</span>
+            <span className="hk-logo">₺</span>
             <h1 className="hk-title">Hesap Kitap</h1>
           </div>
           <p className="hk-sub">Gelir gider takibim</p>
