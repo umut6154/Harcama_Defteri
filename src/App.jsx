@@ -196,7 +196,7 @@ html, body { margin: 0; padding: 0; display: block; width: 100%; max-width: none
 #root { max-width: none; width: 100%; margin: 0; padding: 0; text-align: left; }
 button, input, select { font-family: inherit; }
 
-.hk { --ink: #1f1a4d; --mute: #6b6a93; position: relative; overflow: hidden; min-height: 100vh; color: var(--ink); font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; padding: 26px 18px 40px; --cyc: 8s; animation: hk-spin var(--cyc) ease-in-out infinite alternate;
+.hk { --ink: #1f1a4d; --mute: #6b6a93; position: relative; overflow: hidden; min-height: 100vh; color: var(--ink); font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; padding: 26px 18px 40px; --cyc: 8s; animation: hk-spin var(--cyc) steps(64, end) infinite alternate;
   --p: .5;
   --h1: calc(215 + 76 * var(--p)); --h2: calc(272 + 76 * var(--p)); --h3: calc(329 + 76 * var(--p)); --h4: calc(243 + 76 * var(--p)); --h5: calc(300 + 76 * var(--p));
   --c1: oklch(.76 .16 var(--h1)); --c2: oklch(.74 .18 var(--h2)); --c3: oklch(.74 .19 var(--h3)); --c4: oklch(.75 .17 var(--h4)); --c5: oklch(.74 .19 var(--h5));
@@ -210,7 +210,7 @@ button, input, select { font-family: inherit; }
     radial-gradient(800px 600px at 0% 95%, var(--b4) 0%, transparent 55%),
     #fff7fb; }
 .hk h1, .hk h2, .hk h3, .hk p { margin: 0; }
-.hk-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; pointer-events: none; z-index: 0; animation: hk-drift 16s ease-in-out infinite alternate; }
+.hk-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; pointer-events: none; z-index: 0; will-change: transform; animation: hk-drift 16s ease-in-out infinite alternate; }
 .hk-blob.b1 { width: 340px; height: 340px; background: var(--c3); top: 12%; left: -90px; }
 .hk-blob.b2 { width: 300px; height: 300px; background: var(--c1); top: 40%; right: -80px; animation-delay: -5s; }
 .hk-blob.b3 { width: 280px; height: 280px; background: var(--c2); bottom: -80px; left: 30%; animation-delay: -9s; }
@@ -296,7 +296,7 @@ button, input, select { font-family: inherit; }
 .hk-icon-btn.del { background: #ffe9ee; color: #e11d48; }
 .hk-icon-btn.del:hover { background: #e11d48; color: #fff; }
 .hk-icon-btn svg { width: 15px; height: 15px; }
-.hk-none { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: 36px 18px; background: rgba(255,255,255,.78); border-radius: 28px; border: 2px dashed #d8cbff; backdrop-filter: blur(6px); }
+.hk-none { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: 36px 18px; background: rgba(255,255,255,.9); border-radius: 28px; border: 2px dashed #d8cbff; }
 .hk-none-ico { width: 74px; height: 74px; border-radius: 26px; display: grid; place-items: center; color: #fff; margin-bottom: 6px; background: linear-gradient(135deg, var(--d1), var(--d2) 55%, var(--d3)); box-shadow: 0 14px 30px rgba(255,77,141,.38); animation: hk-float 3.4s ease-in-out infinite; }
 .hk-none-ico svg { width: 36px; height: 36px; }
 .hk-none b { font-size: 18px; font-weight: 800; color: var(--ink); }
@@ -317,7 +317,8 @@ button, input, select { font-family: inherit; }
 .hk-fbtn:hover svg { transform: rotate(-15deg) scale(1.2); }
 .hk-file { display: none; }
 
-.hk-fab { position: fixed; right: 30px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); width: 62px; height: 62px; border-radius: 50%; border: 0; background: linear-gradient(135deg, var(--d1), var(--d2), var(--d3)); color: #fff; display: grid; place-items: center; cursor: pointer; transition: transform .2s; z-index: 20; animation: hk-pulse 2.6s ease-out infinite; }
+.hk-fab { position: fixed; right: 30px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); width: 62px; height: 62px; border-radius: 50%; border: 0; background: linear-gradient(135deg, var(--d1), var(--d2), var(--d3)); color: #fff; display: grid; place-items: center; cursor: pointer; transition: transform .2s; z-index: 20; box-shadow: 0 12px 28px color-mix(in srgb, var(--d2) 55%, transparent); }
+.hk-fab::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--d2); z-index: -1; opacity: 0; animation: hk-ring 2.6s ease-out infinite; }
 .hk-fab:hover { transform: rotate(90deg) scale(1.1); }
 .hk-fab:active { transform: scale(.9); }
 .hk-fab svg { width: 30px; height: 30px; }
@@ -352,12 +353,18 @@ button, input, select { font-family: inherit; }
 @keyframes hk-flow { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 @keyframes hk-float { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-5px) rotate(-5deg); } }
 @keyframes hk-drift { to { transform: translate(60px, 40px) scale(1.2); } }
-@keyframes hk-pulse { 0% { box-shadow: 0 12px 28px rgba(255,77,141,.55), 0 0 0 0 rgba(255,122,26,.5); } 70%,100% { box-shadow: 0 12px 28px rgba(255,77,141,.55), 0 0 0 22px rgba(255,122,26,0); } }
+@keyframes hk-ring { from { transform: scale(1); opacity: .5; } to { transform: scale(1.55); opacity: 0; } }
 @keyframes hk-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes hk-pop { from { opacity: 0; transform: scale(.9) translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes hk-spin { from { --p: 0; } to { --p: 1; } }
+.hk-scrolling, .hk-scrolling *, .hk-scrolling *::after, .hk-scrolling *::before { animation-play-state: paused !important; }
 @media (max-width: 760px) {
   .hk { padding: 18px 14px 40px; }
+  .hk-blob { filter: blur(44px); }
+  .hk-blob.b3 { display: none; }
+  .hk-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 8px 0 130px; }
+  .hk-fbtn { justify-content: center; gap: 6px; padding: 13px 8px; font-size: 12px; line-height: 1.25; text-align: center; }
+  .hk-fbtn svg { width: 15px; height: 15px; flex-shrink: 0; }
   .hk-hero { grid-template-columns: 1fr; }
   .hk-side { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
   .hk-grid { grid-template-columns: 1fr; }
@@ -421,6 +428,7 @@ export default function App() {
   const fileRef = useRef(null);
   const hoverIdx = useRef(null);
   const ptrY = useRef(-1); // grafikte imlecin/parmağın dikey konumu
+  const rootRef = useRef(null);
 
   const [dlg, setDlg] = useState(null);
   const ask = (opts) => new Promise((resolve) => setDlg({ value: '', ...opts, resolve }));
@@ -433,6 +441,17 @@ export default function App() {
   const uiPrompt = (message, value = '') => ask({ kind: 'prompt', message, value: String(value) });
 
   useEffect(() => localStorage.setItem('hk_transactions', JSON.stringify(transactions)), [transactions]);
+  // Sayfa kaydırılırken renk ve süs animasyonlarını durdur (telefonda takılmayı önler)
+  useEffect(() => {
+    let t;
+    const onScroll = () => {
+      rootRef.current?.classList.add('hk-scrolling');
+      clearTimeout(t);
+      t = setTimeout(() => rootRef.current?.classList.remove('hk-scrolling'), 200);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { window.removeEventListener('scroll', onScroll); clearTimeout(t); };
+  }, []);
   useEffect(() => {
     const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ff7a1a'/><stop offset='.5' stop-color='#ff4d8d'/><stop offset='1' stop-color='#9b5cff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(#g)'/><text x='32' y='45' font-size='38' font-weight='800' text-anchor='middle' fill='#fff' font-family='Segoe UI,Arial,sans-serif'>₺</text><circle cx='51' cy='13' r='5' fill='#ffd25e'/></svg>";
     let link = document.querySelector("link[rel~='icon']");
@@ -744,7 +763,7 @@ export default function App() {
   const chipClass = syncState === 'synced' ? 'ok' : syncState === 'error' ? 'err' : '';
 
   return (
-    <div className="hk">
+    <div className="hk" ref={rootRef}>
       <style>{CSS}</style>
       <div className="hk-bg">
         <span className="hk-blob b1" />
