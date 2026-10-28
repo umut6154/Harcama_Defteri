@@ -347,6 +347,28 @@ button, input, select { font-family: inherit; }
 .hk-save { color: #fff; background: linear-gradient(135deg, var(--d2), var(--d3)); box-shadow: 0 10px 22px rgba(155,92,255,.35); }
 .hk-save:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(155,92,255,.45); }
 
+/* Renkler soldan sağa akarak değişir */
+.hk-title, .hk-logo, .hk-balance, .hk-stat.in, .hk-stat.out, .hk-fab, .hk-date, .hk-none-ico, .hk-none button,
+.hk-fbtn, .hk-save, .hk-type.on-in, .hk-type.on-out, .hk-chip.ok i, .hk-panel::before, .hk-modal::before { background-size: 200% 100%; }
+.hk-title { background-image: linear-gradient(90deg, var(--d1), var(--d2), var(--d3), var(--d1)); animation: hk-wave 7s linear infinite; }
+.hk-logo { background-image: linear-gradient(90deg, var(--d1), var(--d2), var(--d3), var(--d1)); animation: hk-float 3.4s ease-in-out infinite, hk-wave 7s linear infinite; }
+.hk-balance { background-image: linear-gradient(90deg, var(--d1), var(--d2), var(--d3), var(--d1)); animation: hk-rise .7s cubic-bezier(.2,.8,.2,1) both, hk-wave 7s linear infinite; }
+.hk-stat.in { background-image: linear-gradient(90deg, var(--d1), var(--d2), var(--d1)); animation: hk-rise .7s .1s cubic-bezier(.2,.8,.2,1) both, hk-wave 7s linear infinite; }
+.hk-stat.out { background-image: linear-gradient(90deg, var(--d3), var(--d2), var(--d3)); animation: hk-rise .7s .2s cubic-bezier(.2,.8,.2,1) both, hk-wave 7s linear infinite; }
+.hk-fab { background-image: linear-gradient(90deg, var(--d1), var(--d2), var(--d3), var(--d1)); animation: hk-wave 7s linear infinite; }
+.hk-date { background-image: linear-gradient(90deg, var(--d1), var(--d3), var(--d1)); animation: hk-wave 7s linear infinite; }
+.hk-none-ico { background-image: linear-gradient(90deg, var(--d1), var(--d2), var(--d3), var(--d1)); animation: hk-float 3.4s ease-in-out infinite, hk-wave 7s linear infinite; }
+.hk-none button { background-image: linear-gradient(90deg, var(--d2), var(--d3), var(--d2)); animation: hk-wave 7s linear infinite; }
+.hk-fbtn:nth-of-type(1) { background-image: linear-gradient(90deg, var(--d1), var(--d2), var(--d1)); animation: hk-wave 7s linear infinite; }
+.hk-fbtn:nth-of-type(2) { background-image: linear-gradient(90deg, var(--d2), var(--d3), var(--d2)); animation: hk-wave 7s linear infinite; }
+.hk-fbtn:nth-of-type(3) { background-image: linear-gradient(90deg, var(--d3), var(--d1), var(--d3)); animation: hk-wave 7s linear infinite; }
+.hk-fbtn:nth-of-type(4) { background-image: linear-gradient(90deg, var(--d1), var(--d3), var(--d1)); animation: hk-wave 7s linear infinite; }
+.hk-save { background-image: linear-gradient(90deg, var(--d2), var(--d3), var(--d2)); animation: hk-wave 7s linear infinite; }
+.hk-type.on-in { background-image: linear-gradient(90deg, var(--d1), var(--d2), var(--d1)); animation: hk-wave 7s linear infinite; }
+.hk-type.on-out { background-image: linear-gradient(90deg, var(--d3), var(--d2), var(--d3)); animation: hk-wave 7s linear infinite; }
+.hk-chip.ok i { background-image: linear-gradient(90deg, var(--d1), var(--d2), var(--d1)); animation: hk-wave 7s linear infinite; }
+.hk-panel::before, .hk-modal::before { background-image: linear-gradient(90deg, var(--c1), var(--c4), var(--c2), var(--c5), var(--c3), var(--c1)); animation: hk-wave 7s linear infinite; }
+@keyframes hk-wave { from { background-position: 0% 50%; } to { background-position: -200% 50%; } }
 @keyframes hk-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes hk-slide { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
 @keyframes hk-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
