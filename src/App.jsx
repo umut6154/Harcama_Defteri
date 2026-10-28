@@ -192,12 +192,11 @@ const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 *, *::before, *::after { box-sizing: border-box; }
 @property --p { syntax: '<number>'; inherits: true; initial-value: 0.5; }
-@property --wx { syntax: '<length>'; inherits: true; initial-value: 0px; }
 html, body { margin: 0; padding: 0; display: block; width: 100%; max-width: none; min-width: 0; background: #fff6fb; color-scheme: light; text-align: left; }
 #root { max-width: none; width: 100%; margin: 0; padding: 0; text-align: left; }
 button, input, select { font-family: inherit; }
 
-.hk { --ink: #1f1a4d; --mute: #6b6a93; position: relative; overflow: hidden; min-height: 100vh; color: var(--ink); font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; padding: 26px 18px 40px; --cyc: 8s; animation: hk-spin var(--cyc) steps(64, end) infinite alternate, hk-wx var(--cyc) linear infinite;
+.hk { --ink: #1f1a4d; --mute: #6b6a93; position: relative; overflow: hidden; min-height: 100vh; color: var(--ink); font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; padding: 26px 18px 40px; --cyc: 8s; animation: hk-spin var(--cyc) steps(64, end) infinite alternate;
   --p: .5;
   --h1: calc(215 + 76 * var(--p)); --h2: calc(272 + 76 * var(--p)); --h3: calc(329 + 76 * var(--p)); --h4: calc(243 + 76 * var(--p)); --h5: calc(300 + 76 * var(--p));
   --c1: oklch(.76 .16 var(--h1)); --c2: oklch(.74 .18 var(--h2)); --c3: oklch(.74 .19 var(--h3)); --c4: oklch(.75 .17 var(--h4)); --c5: oklch(.74 .19 var(--h5));
@@ -245,7 +244,7 @@ button, input, select { font-family: inherit; }
 .hk-stat.in { background: linear-gradient(135deg, var(--d1), var(--d2)); box-shadow: 0 16px 34px color-mix(in srgb, var(--d1) 40%, transparent); }
 .hk-stat.out { background: linear-gradient(135deg, var(--d3), var(--d2)); box-shadow: 0 16px 34px color-mix(in srgb, var(--d3) 40%, transparent); animation-delay: .2s; }
 .hk-stat::after { content: ''; position: absolute; width: 110px; height: 110px; border-radius: 50%; right: -30px; top: -40px; background: rgba(255,255,255,.22); }
-.hk-stat .lbl { font-size: 12px; font-weight: 500; opacity: .95; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.hk-stat .lbl { font-size: 12px; font-weight: 500; opacity: .95; display: flex; align-items: center; gap: 6px; }
 .hk-stat .lbl svg { width: 15px; height: 15px; }
 .hk-stat b { margin-top: 4px; font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; position: relative; z-index: 1; }
 
@@ -254,7 +253,6 @@ button, input, select { font-family: inherit; }
 .hk .hk-sumhead h2 { display: flex; align-items: center; gap: 10px; font-size: 25px; font-weight: 800; letter-spacing: -.01em; color: #1f1a4d; -webkit-text-fill-color: #1f1a4d; opacity: 1; text-shadow: 0 2px 0 rgba(255,255,255,.9); }
 .hk .hk-sumhead h2::before { content: ''; width: 8px; height: 28px; border-radius: 99px; background: linear-gradient(180deg, var(--c1), var(--c2), var(--c3)); }
 .hk-select { background: #fff; color: var(--ink); border: 2px solid transparent; border-radius: 999px; padding: 9px 18px; font-size: 14px; font-weight: 600; cursor: pointer; outline: none; box-shadow: 0 6px 18px rgba(80,60,160,.14); background-image: linear-gradient(#fff, #fff), linear-gradient(90deg, var(--c1), var(--c2), var(--c3)); background-origin: border-box; background-clip: padding-box, border-box; transition: box-shadow .2s; }
-.hk-select { background-image: linear-gradient(#fff, #fff), var(--wc); background-size: 100% 100%, var(--vw2, 800px) 100%; background-repeat: no-repeat, repeat-x; background-position: 0 0, calc(var(--wx, 0px) - var(--ox, 0px)) 50%; }
 .hk-select:focus { box-shadow: 0 0 0 4px rgba(155,92,255,.25); }
 
 .hk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -349,26 +347,6 @@ button, input, select { font-family: inherit; }
 .hk-save { color: #fff; background: linear-gradient(135deg, var(--d2), var(--d3)); box-shadow: 0 10px 22px rgba(155,92,255,.35); }
 .hk-save:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(155,92,255,.45); }
 
-/* Renkler tüm ekranda tek bir dalga olarak soldan sağa akar (arka plan dahil, hepsi senkron).
-   --ox: öğenin soldan uzaklığı, --vw2: ekran genişliğinin 2 katı (ikisini de aşağıdaki effect yazar). */
-.hk { --wd: linear-gradient(90deg, var(--d1), var(--d2), var(--d3), var(--d2), var(--d1));
-  --wc: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c2), var(--c1));
-  --we: linear-gradient(90deg, oklch(.93 .06 var(--h1)), oklch(.93 .06 var(--h2)), oklch(.93 .06 var(--h3)), oklch(.93 .06 var(--h2)), oklch(.93 .06 var(--h1))); }
-.hk-title, .hk-logo, .hk-balance, .hk-stat.in, .hk-stat.out, .hk-fab, .hk-date, .hk-none-ico, .hk-none button,
-.hk-fbtn:nth-of-type(n), .hk-save, .hk-type.on-in, .hk-type.on-out, .hk-chip.ok i { background-image: var(--wd); }
-.hk-panel::before, .hk-modal::before, .hk-blob.b1, .hk-blob.b2, .hk-blob.b3 { background-image: var(--wc); }
-.hk-bg { background-image: var(--we); background-color: #fff7fb; }
-.hk-title, .hk-logo, .hk-balance, .hk-stat.in, .hk-stat.out, .hk-fab, .hk-date, .hk-none-ico, .hk-none button,
-.hk-fbtn:nth-of-type(n), .hk-save, .hk-type.on-in, .hk-type.on-out, .hk-chip.ok i, .hk-panel::before, .hk-modal::before,
-.hk-bg, .hk-blob.b1, .hk-blob.b2, .hk-blob.b3 { background-size: var(--vw2, 800px) 100%; background-repeat: repeat-x; background-position: calc(var(--wx, 0px) - var(--ox, 0px)) 50%; }
-.hk-logo, .hk-none-ico { animation: hk-float 3.4s ease-in-out infinite; }
-.hk-balance { animation: hk-rise .7s cubic-bezier(.2,.8,.2,1) both; }
-.hk-stat.in { animation: hk-rise .7s .1s cubic-bezier(.2,.8,.2,1) both; }
-.hk-stat.out { animation: hk-rise .7s .2s cubic-bezier(.2,.8,.2,1) both; }
-.hk-blob.b1, .hk-blob.b2, .hk-blob.b3 { animation: hk-drift 16s ease-in-out infinite alternate; }
-.hk-blob.b2 { animation-delay: -5s; }
-.hk-blob.b3 { animation-delay: -9s; }
-@keyframes hk-wx { from { --wx: 0px; } to { --wx: var(--vw2, 800px); } }
 @keyframes hk-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes hk-slide { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
 @keyframes hk-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
@@ -379,6 +357,7 @@ button, input, select { font-family: inherit; }
 @keyframes hk-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes hk-pop { from { opacity: 0; transform: scale(.9) translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes hk-spin { from { --p: 0; } to { --p: 1; } }
+.hk-scrolling, .hk-scrolling *, .hk-scrolling *::after, .hk-scrolling *::before { animation-play-state: paused !important; }
 @media (max-width: 760px) {
   .hk { padding: 18px 14px 40px; }
   .hk-blob { filter: blur(44px); }
@@ -392,8 +371,6 @@ button, input, select { font-family: inherit; }
   .hk-balance { padding: 24px 22px; }
   .hk-balance .big { font-size: 38px; }
   .hk-stat b { font-size: 19px; }
-  .hk-stat { padding: 18px 14px; }
-  .hk-stat .lbl { font-size: 11.5px; gap: 4px; }
   .hk-fab { right: 18px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -464,29 +441,16 @@ export default function App() {
   const uiPrompt = (message, value = '') => ask({ kind: 'prompt', message, value: String(value) });
 
   useEffect(() => localStorage.setItem('hk_transactions', JSON.stringify(transactions)), [transactions]);
-  // Renk dalgasını ekran genelinde senkron tut: her renkli öğeye soldan uzaklığını (--ox), köke ekran genişliğini (--vw2) yaz
+  // Sayfa kaydırılırken renk ve süs animasyonlarını durdur (telefonda takılmayı önler)
   useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    const SEL = '.hk-bg, .hk-blob, .hk-title, .hk-logo, .hk-balance, .hk-stat, .hk-fab, .hk-date, .hk-none-ico, .hk-none button, .hk-fbtn, .hk-save, .hk-type, .hk-chip i, .hk-panel, .hk-modal, .hk-select';
-    const left = (el) => { let x = 0; for (let n = el; n; n = n.offsetParent) x += n.offsetLeft + (n === el ? 0 : n.clientLeft); return x; };
-    let raf = 0;
-    const apply = () => {
-      raf = 0;
-      root.style.setProperty('--vw2', window.innerWidth * 2 + 'px');
-      root.querySelectorAll(SEL).forEach((el) => {
-        const v = left(el) + 'px';
-        if (el.style.getPropertyValue('--ox') !== v) el.style.setProperty('--ox', v);
-      });
+    let t;
+    const onScroll = () => {
+      rootRef.current?.classList.add('hk-scrolling');
+      clearTimeout(t);
+      t = setTimeout(() => rootRef.current?.classList.remove('hk-scrolling'), 200);
     };
-    const schedule = () => { if (!raf) raf = requestAnimationFrame(apply); };
-    apply();
-    window.addEventListener('resize', schedule);
-    window.addEventListener('load', schedule);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
-    const mo = new MutationObserver(schedule);
-    mo.observe(root, { childList: true, subtree: true });
-    return () => { window.removeEventListener('resize', schedule); window.removeEventListener('load', schedule); mo.disconnect(); cancelAnimationFrame(raf); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { window.removeEventListener('scroll', onScroll); clearTimeout(t); };
   }, []);
   useEffect(() => {
     const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ff7a1a'/><stop offset='.5' stop-color='#ff4d8d'/><stop offset='1' stop-color='#9b5cff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(#g)'/><text x='32' y='45' font-size='38' font-weight='800' text-anchor='middle' fill='#fff' font-family='Segoe UI,Arial,sans-serif'>₺</text><circle cx='51' cy='13' r='5' fill='#ffd25e'/></svg>";
