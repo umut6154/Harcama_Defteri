@@ -284,20 +284,20 @@ button, input, select { font-family: inherit; }
 .hk-wrap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
 
 /* Üst bar */
-.hk-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.hk-brand { display: flex; align-items: center; gap: 12px; }
+.hk-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 12px 10px; }
+.hk-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.hk-brand > div:last-child { min-width: 0; }
 .hk-logo { width: 48px; height: 48px; border-radius: 16px; background: linear-gradient(135deg, var(--d1), var(--d2) 55%, var(--d3)); display: grid; place-items: center; font-size: 26px; font-weight: 800; color: #fff; box-shadow: 0 10px 24px rgba(255,77,141,.4); animation: hk-float 3.4s ease-in-out infinite; }
 .hk-title { font-size: 28px; font-weight: 800; letter-spacing: -.01em; background: linear-gradient(90deg, var(--d1), var(--d2), var(--d3)); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
 .hk-sub { font-size: 12.5px; color: var(--mute); margin-top: 1px; }
-.hk-chip { display: inline-flex; align-items: center; gap: 8px; background: #fff; border-radius: 999px; padding: 6px 14px 6px 6px; font-size: 12px; font-weight: 600; color: var(--ink); box-shadow: 0 6px 18px rgba(80,60,160,.12); max-width: 100%; }
+.hk-chip { grid-column: 1 / -1; grid-row: 2; justify-self: start; display: inline-flex; align-items: center; gap: 8px; background: #fff; border-radius: 999px; padding: 6px 14px 6px 6px; font-size: 12px; font-weight: 600; color: var(--ink); box-shadow: 0 6px 18px rgba(80,60,160,.12); max-width: 100%; }
 .hk-chip i { font-style: normal; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 700; background: linear-gradient(135deg, #3b7bff, #9b5cff); flex-shrink: 0; }
 .hk-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hk-chip.err i { background: linear-gradient(135deg, #ff4d4d, #ff9a3d); }
 .hk-chip.ok i { background: linear-gradient(135deg, var(--d1), var(--d2)); }
 
 /* Bakiye alanı */
-.hk-head-r { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.hk-lang { display: inline-flex; align-items: center; padding: 4px; gap: 2px; border: 0; border-radius: 999px; cursor: pointer; background: #fff; box-shadow: 0 6px 18px rgba(80,60,160,.14); transition: transform .2s, box-shadow .2s; }
+.hk-lang { grid-column: 2; grid-row: 1; justify-self: end; margin-top: 7px; flex-shrink: 0; white-space: nowrap; display: inline-flex; align-items: center; padding: 4px; gap: 2px; border: 0; border-radius: 999px; cursor: pointer; background: #fff; box-shadow: 0 6px 18px rgba(80,60,160,.14); transition: transform .2s, box-shadow .2s; }
 .hk-lang:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(80,60,160,.2); }
 .hk-lang b { font-size: 12px; font-weight: 700; padding: 6px 11px; border-radius: 999px; color: var(--mute); transition: background .25s, color .25s; }
 .hk-lang b.on { color: #fff; background: linear-gradient(135deg, var(--d1), var(--d2) 55%, var(--d3)); }
@@ -855,7 +855,6 @@ export default function App() {
               <p className="hk-sub">{T.sub}</p>
             </div>
           </div>
-          <div className="hk-head-r">
           <button type="button" className="hk-lang" onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} aria-label={T.langBtn} title={T.langBtn}>
             <b className={lang === 'tr' ? 'on' : ''}>TR</b><b className={lang === 'en' ? 'on' : ''}>EN</b>
           </button>
@@ -870,7 +869,6 @@ export default function App() {
               </span>
             </div>
           )}
-          </div>
         </header>
 
         <section className="hk-hero">
