@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Pencil, Trash2, Cloud, Download, Upload, CircleDot, Plus, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip } from 'chart.js';
