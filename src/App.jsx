@@ -357,14 +357,13 @@ button, input, select { font-family: inherit; }
 @keyframes hk-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes hk-pop { from { opacity: 0; transform: scale(.9) translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes hk-spin { from { --p: 0; } to { --p: 1; } }
-.hk-scrolling, .hk-scrolling *, .hk-scrolling *::after, .hk-scrolling *::before { animation-play-state: paused !important; }
 @media (max-width: 760px) {
   .hk { padding: 18px 14px 40px; }
   .hk-blob { filter: blur(44px); }
   .hk-blob.b3 { display: none; }
-  .hk-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 8px 0 130px; }
-  .hk-fbtn { justify-content: center; gap: 6px; padding: 13px 8px; font-size: 12px; line-height: 1.25; text-align: center; }
-  .hk-fbtn svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .hk-foot { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 8px 0 130px; }
+  .hk-fbtn { flex-direction: column; justify-content: center; align-items: center; gap: 5px; padding: 11px 4px; border-radius: 18px; font-size: 10.5px; font-weight: 700; line-height: 1.2; text-align: center; min-width: 0; }
+  .hk-fbtn svg { width: 18px; height: 18px; flex-shrink: 0; }
   .hk-hero { grid-template-columns: 1fr; }
   .hk-side { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
   .hk-grid { grid-template-columns: 1fr; }
@@ -428,7 +427,6 @@ export default function App() {
   const fileRef = useRef(null);
   const hoverIdx = useRef(null);
   const ptrY = useRef(-1); // grafikte imlecin/parmağın dikey konumu
-  const rootRef = useRef(null);
 
   const [dlg, setDlg] = useState(null);
   const ask = (opts) => new Promise((resolve) => setDlg({ value: '', ...opts, resolve }));
@@ -441,17 +439,6 @@ export default function App() {
   const uiPrompt = (message, value = '') => ask({ kind: 'prompt', message, value: String(value) });
 
   useEffect(() => localStorage.setItem('hk_transactions', JSON.stringify(transactions)), [transactions]);
-  // Sayfa kaydırılırken renk ve süs animasyonlarını durdur (telefonda takılmayı önler)
-  useEffect(() => {
-    let t;
-    const onScroll = () => {
-      rootRef.current?.classList.add('hk-scrolling');
-      clearTimeout(t);
-      t = setTimeout(() => rootRef.current?.classList.remove('hk-scrolling'), 200);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => { window.removeEventListener('scroll', onScroll); clearTimeout(t); };
-  }, []);
   useEffect(() => {
     const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ff7a1a'/><stop offset='.5' stop-color='#ff4d8d'/><stop offset='1' stop-color='#9b5cff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(#g)'/><text x='32' y='45' font-size='38' font-weight='800' text-anchor='middle' fill='#fff' font-family='Segoe UI,Arial,sans-serif'>₺</text><circle cx='51' cy='13' r='5' fill='#ffd25e'/></svg>";
     let link = document.querySelector("link[rel~='icon']");
@@ -763,7 +750,7 @@ export default function App() {
   const chipClass = syncState === 'synced' ? 'ok' : syncState === 'error' ? 'err' : '';
 
   return (
-    <div className="hk" ref={rootRef}>
+    <div className="hk">
       <style>{CSS}</style>
       <div className="hk-bg">
         <span className="hk-blob b1" />
