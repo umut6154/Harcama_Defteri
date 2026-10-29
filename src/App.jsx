@@ -241,11 +241,11 @@ button, input, select { font-family: inherit; }
 .hk-side { display: grid; grid-template-rows: 1fr 1fr; gap: 16px; }
 .hk-stat { position: relative; overflow: hidden; border-radius: 24px; padding: 18px 20px; color: #fff; display: flex; flex-direction: column; justify-content: center; animation: hk-rise .7s .1s cubic-bezier(.2,.8,.2,1) both; transition: transform .25s, box-shadow .25s; }
 .hk-stat:hover { transform: translateY(-4px) scale(1.02); }
-.hk-stat.in { background: linear-gradient(135deg, var(--d1), var(--d2)); box-shadow: 0 16px 34px color-mix(in srgb, var(--d1) 40%, transparent); }
-.hk-stat.out { background: linear-gradient(135deg, var(--d3), var(--d2)); box-shadow: 0 16px 34px color-mix(in srgb, var(--d3) 40%, transparent); animation-delay: .2s; }
+.hk-stat.in { background: linear-gradient(120deg, var(--d1), var(--d2) 50%, var(--d3)); box-shadow: 0 16px 34px color-mix(in srgb, var(--d2) 40%, transparent); }
+.hk-stat.out { background: linear-gradient(120deg, var(--d1), var(--d2) 50%, var(--d3)); box-shadow: 0 16px 34px color-mix(in srgb, var(--d2) 40%, transparent); animation-delay: .2s; }
 .hk-stat::after { content: ''; position: absolute; width: 110px; height: 110px; border-radius: 50%; right: -30px; top: -40px; background: rgba(255,255,255,.22); }
-.hk-stat .lbl { font-size: 12px; font-weight: 500; opacity: .95; display: flex; align-items: center; gap: 6px; }
-.hk-stat .lbl svg { width: 15px; height: 15px; }
+.hk-stat .lbl { font-size: 12px; font-weight: 500; opacity: .95; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.hk-stat .lbl svg { width: 15px; height: 15px; flex-shrink: 0; }
 .hk-stat b { margin-top: 4px; font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; position: relative; z-index: 1; }
 
 /* Aylık özet */
@@ -369,6 +369,8 @@ button, input, select { font-family: inherit; }
   .hk-grid { grid-template-columns: 1fr; }
   .hk-balance { padding: 24px 22px; }
   .hk-balance .big { font-size: 38px; }
+  .hk-stat { padding: 16px 14px; }
+  .hk-stat .lbl { font-size: 11.5px; gap: 5px; }
   .hk-stat b { font-size: 19px; }
   .hk-fab { right: 18px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
 }
