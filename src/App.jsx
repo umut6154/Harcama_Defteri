@@ -64,7 +64,70 @@ const CAT_COLORS = {
 const colorOf = (name) => CAT_COLORS[name] || '#7c83c9';
 const ALL_CATEGORIES = [...CATEGORIES.gider, ...CATEGORIES.gelir];
 const iconOf = (name) => ALL_CATEGORIES.find((c) => c.name === name)?.icon || '📦';
-const MONTHS_TR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+const MONTHS = {
+  tr: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+};
+const DAYS = {
+  tr: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+  en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+};
+
+/* ---------- Diller (kayıtlar her zaman Türkçe kategori adıyla saklanır; sadece görünüm çevrilir) ---------- */
+const STR = {
+  tr: {
+    sub: 'Gelir gider takibim',
+    synced: 'Eşleşti', syncing: 'Eşleniyor…', syncErr: 'Eşleme hatası',
+    balance: 'Güncel bakiye', monthIn: 'Bu ay gelen', monthOut: 'Bu ay harcanan',
+    summary: 'Aylık özet', byCat: 'Kategoriye göre harcama', noSpend: 'Bu ay henüz harcama yok.', daily: 'Günlük harcama',
+    noRec: 'Bu ay için kayıt yok', startMonth: (m) => `İlk gelir ya da giderini ekleyerek ${m} ayını başlat.`, addFirst: 'İlk kaydı ekle',
+    logout: 'Çıkış yap', login: 'Google ile giriş', exp: 'Yedek indir', imp: 'Yedek yükle', initBal: 'Başlangıç bakiyesi',
+    newRec: 'Yeni kayıt', editRec: '✏️ Kaydı düzenle', newRecT: '✨ Yeni kayıt', expense: 'Gider', income: 'Gelir',
+    amount: 'Tutar (₺)', category: 'Kategori', date: 'Tarih', desc: 'Açıklama', optional: 'İsteğe bağlı', cancel: 'Vazgeç', save: 'Kaydet', ok: 'Tamam',
+    edit: 'Düzenle', del: 'Sil', dayN: (n) => `${n}. gün`, langBtn: 'Dili değiştir',
+    delAsk: (d, t, a) => `${d} - ${t} - ${a} ₺ silinsin mi?`,
+    initPrompt: 'Başlangıç bakiyesi (₺):',
+    noReadable: (k) => `Dosyada okunabilir kayıt bulunamadı. (Dosyadaki alanlar: ${k})`, listWord: 'liste', emptyWord: 'boş',
+    replaceAsk: (a, b) => `Mevcut ${a} kayıt silinip yerine yedekteki ${b} kayıt yüklenecek. Devam edilsin mi?`,
+    imported: (n) => `Yedek yüklendi! ${n} kayıt aktarıldı.`, badFile: 'Geçersiz dosya! Dosya bozuk veya JSON değil.',
+    fbMissing: 'Firebase ayarı eksik: .env dosyasına VITE_FIREBASE_API_KEY ve VITE_FIREBASE_APP_ID ekleyip siteyi yeniden başlat.',
+    badKey: "API anahtarı geçersiz. Firebase Console'daki apiKey değerini koddaki firebaseConfig içine harfi harfine kopyala.",
+    gOff: "Google girişi kapalı. Firebase > Authentication > Sign-in method > Google'ı etkinleştir.",
+    badDomain: "Bu alan adı Firebase'de yetkili değil. Authentication > Settings > Authorized domains kısmına ekle.",
+    popup: 'Tarayıcı giriş penceresini engelledi. Adres çubuğundaki "pencere engellendi" simgesinden izin verip tekrar dene.',
+    loginFail: (c) => `Giriş yapılamadı (${c})`,
+    outSynced: 'Çıkış yapınca bu cihazdaki kayıtlar temizlenir; hesabında kayıtlı kalır. Devam edilsin mi?',
+    outUnsynced: '⚠ Kayıtların buluta eşlenmedi! Çıkarsan bu cihazdaki kayıtlar kalıcı olarak silinir. Önce "Yedek indir" ile yedek al. Yine de çıkılsın mı?',
+    cats: {},
+  },
+  en: {
+    sub: 'My income & expense tracker',
+    synced: 'Synced', syncing: 'Syncing…', syncErr: 'Sync error',
+    balance: 'Current balance', monthIn: 'Income this month', monthOut: 'Spent this month',
+    summary: 'Monthly summary', byCat: 'Spending by category', noSpend: 'No spending this month yet.', daily: 'Daily spending',
+    noRec: 'No records this month', startMonth: (m) => `Add your first income or expense to start ${m}.`, addFirst: 'Add first record',
+    logout: 'Sign out', login: 'Sign in with Google', exp: 'Download backup', imp: 'Upload backup', initBal: 'Starting balance',
+    newRec: 'New record', editRec: '✏️ Edit record', newRecT: '✨ New record', expense: 'Expense', income: 'Income',
+    amount: 'Amount (₺)', category: 'Category', date: 'Date', desc: 'Description', optional: 'Optional', cancel: 'Cancel', save: 'Save', ok: 'OK',
+    edit: 'Edit', del: 'Delete', dayN: (n) => `Day ${n}`, langBtn: 'Change language',
+    delAsk: (d, t, a) => `Delete ${d} - ${t} - ${a} ₺?`,
+    initPrompt: 'Starting balance (₺):',
+    noReadable: (k) => `No readable records found in the file. (Fields in file: ${k})`, listWord: 'list', emptyWord: 'empty',
+    replaceAsk: (a, b) => `Your current ${a} records will be deleted and replaced with the ${b} records from the backup. Continue?`,
+    imported: (n) => `Backup loaded! ${n} records imported.`, badFile: 'Invalid file! The file is corrupted or not JSON.',
+    fbMissing: 'Firebase config is missing: add VITE_FIREBASE_API_KEY and VITE_FIREBASE_APP_ID to your .env file and restart the site.',
+    badKey: 'Invalid API key. Copy the apiKey from the Firebase Console exactly into firebaseConfig in the code.',
+    gOff: 'Google sign-in is disabled. Enable Google in Firebase > Authentication > Sign-in method.',
+    badDomain: 'This domain is not authorized in Firebase. Add it under Authentication > Settings > Authorized domains.',
+    popup: 'The browser blocked the sign-in window. Allow pop-ups from the address bar icon and try again.',
+    loginFail: (c) => `Could not sign in (${c})`,
+    outSynced: 'Signing out clears the records on this device; they stay saved in your account. Continue?',
+    outUnsynced: '⚠ Your records are not synced to the cloud! If you sign out, the records on this device will be permanently deleted. Download a backup first. Sign out anyway?',
+    cats: { 'Yemek': 'Food', 'Market': 'Groceries', 'Yurt/KYK': 'Dorm/KYK', 'Abonelik': 'Subscriptions', 'Eğlence': 'Entertainment', 'Kişisel Bakım': 'Personal Care', 'Ulaşım': 'Transport', 'Diğer': 'Other', 'Burs/Harçlık': 'Scholarship/Allowance', 'Maaş': 'Salary', 'Diğer Gelir': 'Other Income' },
+  },
+};
+let curLang = 'tr';
+const catLabel = (name) => STR[curLang].cats[name] || name;
 
 /* ---------- Yardımcılar ---------- */
 const pad = (n) => String(n).padStart(2, '0');
@@ -72,16 +135,20 @@ const todayStr = () => {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 };
-const fmt = (n) => Number(n).toLocaleString('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 2, useGrouping: 'always' });
-const fmt2 = (n) => Number(n).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: 'always' });
-const trDate = (iso) => iso.split('-').reverse().join('.');
+const loc = () => (curLang === 'en' ? 'en-US' : 'tr-TR');
+const fmt = (n) => Number(n).toLocaleString(loc(), { minimumFractionDigits: 0, maximumFractionDigits: 2, useGrouping: 'always' });
+const fmt2 = (n) => Number(n).toLocaleString(loc(), { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: 'always' });
+const trDate = (iso) => {
+  const [y, m, d] = iso.split('-');
+  return curLang === 'en' ? `${m}/${d}/${y}` : `${d}.${m}.${y}`;
+};
 const monthLabel = (ym) => {
   const [y, m] = ym.split('-');
-  return `${MONTHS_TR[parseInt(m, 10) - 1]} ${y}`;
+  return `${MONTHS[curLang][parseInt(m, 10) - 1]} ${y}`;
 };
 const dayName = (iso) => {
   const [y, m, d] = iso.split('-').map(Number);
-  return ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'][new Date(y, m - 1, d).getDay()];
+  return DAYS[curLang][new Date(y, m - 1, d).getDay()];
 };
 const readJSON = (key, fallback) => {
   try {
@@ -229,6 +296,11 @@ button, input, select { font-family: inherit; }
 .hk-chip.ok i { background: linear-gradient(135deg, var(--d1), var(--d2)); }
 
 /* Bakiye alanı */
+.hk-head-r { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.hk-lang { display: inline-flex; align-items: center; padding: 4px; gap: 2px; border: 0; border-radius: 999px; cursor: pointer; background: #fff; box-shadow: 0 6px 18px rgba(80,60,160,.14); transition: transform .2s, box-shadow .2s; }
+.hk-lang:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(80,60,160,.2); }
+.hk-lang b { font-size: 12px; font-weight: 700; padding: 6px 11px; border-radius: 999px; color: var(--mute); transition: background .25s, color .25s; }
+.hk-lang b.on { color: #fff; background: linear-gradient(135deg, var(--d1), var(--d2) 55%, var(--d3)); }
 .hk-hero { display: grid; grid-template-columns: 1.7fr 1fr; gap: 16px; }
 .hk-balance { position: relative; overflow: hidden; border-radius: 30px; padding: 28px 30px; color: #fff; background: linear-gradient(120deg, var(--d1), var(--d2) 50%, var(--d3)); animation: hk-rise .7s cubic-bezier(.2,.8,.2,1) both; box-shadow: 0 24px 50px color-mix(in srgb, var(--d2) 40%, transparent); }
 .hk-balance::before { content: ''; position: absolute; width: 260px; height: 260px; border-radius: 50%; right: -70px; top: -90px; background: rgba(255,255,255,.2); }
@@ -411,6 +483,9 @@ const CountUp = ({ value, format }) => {
 
 /* ---------- Uygulama ---------- */
 export default function App() {
+  const [lang, setLang] = useState(() => (localStorage.getItem('hk_lang') === 'en' ? 'en' : 'tr'));
+  curLang = lang;
+  const T = STR[lang];
   const [user, setUser] = useState(null);
   const [syncState, setSyncState] = useState('local'); // local | loading | synced | error
   const cloudReady = useRef(false);
@@ -453,6 +528,20 @@ export default function App() {
     document.title = 'Hesap Kitap';
   }, []);
   useEffect(() => localStorage.setItem('hk_initial_balance', String(initialBalance)), [initialBalance]);
+  // Tarayıcı otomatik çevirisini (Chrome "Çevir" vb.) kapat; sayfa dilini seçili dile ayarla
+  useEffect(() => {
+    localStorage.setItem('hk_lang', lang);
+    const root = document.documentElement;
+    root.lang = lang;
+    root.setAttribute('translate', 'no');
+    root.classList.add('notranslate');
+    let m = document.querySelector("meta[name='google']");
+    if (!m) { m = document.createElement('meta'); m.name = 'google'; document.head.appendChild(m); }
+    m.content = 'notranslate';
+    let c = document.querySelector("meta[http-equiv='Content-Language']");
+    if (!c) { c = document.createElement('meta'); c.httpEquiv = 'Content-Language'; document.head.appendChild(c); }
+    c.content = lang;
+  }, [lang]);
   useEffect(() => {
     localStorage.removeItem('hk_user');
     const auth = getFirebaseAuth();
@@ -558,7 +647,7 @@ export default function App() {
       return monthly.filter((t) => t.date === d && t.type === 'gider').reduce((a, t) => a + parseFloat(t.amount), 0);
     });
     return {
-      labels: totals.map((_, i) => `${i + 1}. gün`),
+      labels: totals.map((_, i) => T.dayN(i + 1)),
       datasets: [
         {
           data: totals,
@@ -574,7 +663,7 @@ export default function App() {
         },
       ],
     };
-  }, [monthly, selectedMonth]);
+  }, [monthly, selectedMonth, lang]);
 
   const chartOptions = {
     responsive: true,
@@ -660,7 +749,7 @@ export default function App() {
   };
 
   const handleDelete = async (item) => {
-    const ok = await uiConfirm(`${trDate(item.date)} - ${item.description || item.category} - ${fmt(item.amount)} ₺ silinsin mi?`);
+    const ok = await uiConfirm(T.delAsk(trDate(item.date), item.description || catLabel(item.category), fmt(item.amount)));
     if (ok) setTransactions((prev) => prev.filter((t) => t.id !== item.id));
   };
 
@@ -683,18 +772,18 @@ export default function App() {
         const parsed = JSON.parse(text);
         const { list, initial } = normalizeBackup(parsed);
         if (list.length === 0) {
-          const keys = Array.isArray(parsed) ? 'liste' : Object.keys(parsed || {}).join(', ');
-          uiAlert(`Dosyada okunabilir kayıt bulunamadı. (Dosyadaki alanlar: ${keys || 'boş'})`);
+          const keys = Array.isArray(parsed) ? T.listWord : Object.keys(parsed || {}).join(', ');
+          uiAlert(T.noReadable(keys || T.emptyWord));
           return;
         }
-        if (transactions.length > 0 && !(await uiConfirm(`Mevcut ${transactions.length} kayıt silinip yerine yedekteki ${list.length} kayıt yüklenecek. Devam edilsin mi?`))) return;
+        if (transactions.length > 0 && !(await uiConfirm(T.replaceAsk(transactions.length, list.length)))) return;
         setTransactions(list);
         if (typeof initial === 'number') setInitialBalance(initial);
         const months = [...new Set(list.map((t) => t.date.slice(0, 7)))].sort().reverse();
         if (!months.includes(selectedMonth)) setSelectedMonth(months[0]);
-        uiAlert(`Yedek yüklendi! ${list.length} kayıt aktarıldı.`);
+        uiAlert(T.imported(list.length));
       } catch {
-        uiAlert('Geçersiz dosya! Dosya bozuk veya JSON değil.');
+        uiAlert(T.badFile);
       }
     };
     reader.readAsText(file, 'UTF-8');
@@ -702,7 +791,7 @@ export default function App() {
   };
 
   const handleSetInitialBalance = async () => {
-    const val = await uiPrompt('Başlangıç bakiyesi (₺):', initialBalance);
+    const val = await uiPrompt(T.initPrompt, initialBalance);
     if (val === null) return;
     const raw = String(val).trim();
     const n = /^\d{1,3}(\.\d{3})+$/.test(raw) ? parseFloat(raw.replace(/\./g, '')) : toNumber(raw);
@@ -712,7 +801,7 @@ export default function App() {
   const handleLogin = async () => {
     const auth = getFirebaseAuth();
     if (!auth) {
-      uiAlert('Firebase ayarı eksik: .env dosyasına VITE_FIREBASE_API_KEY ve VITE_FIREBASE_APP_ID ekleyip siteyi yeniden başlat.');
+      uiAlert(T.fbMissing);
       return;
     }
     const provider = new GoogleAuthProvider();
@@ -721,19 +810,17 @@ export default function App() {
       await signInWithPopup(auth, provider);
     } catch (err) {
       if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') return;
-      if (err.code === 'auth/api-key-not-valid.-please-pass-a-valid-api-key.' || err.code === 'auth/invalid-api-key') uiAlert('API anahtarı geçersiz. Firebase Console\'daki apiKey değerini koddaki firebaseConfig içine harfi harfine kopyala.');
-      else if (err.code === 'auth/operation-not-allowed') uiAlert('Google girişi kapalı. Firebase > Authentication > Sign-in method > Google\'ı etkinleştir.');
-      else if (err.code === 'auth/unauthorized-domain') uiAlert('Bu alan adı Firebase\'de yetkili değil. Authentication > Settings > Authorized domains kısmına ekle.');
-      else if (err.code === 'auth/popup-blocked') uiAlert('Tarayıcı giriş penceresini engelledi. Adres çubuğundaki "pencere engellendi" simgesinden izin verip tekrar dene.');
-      else uiAlert(`Giriş yapılamadı (${err.code || err.message})`);
+      if (err.code === 'auth/api-key-not-valid.-please-pass-a-valid-api-key.' || err.code === 'auth/invalid-api-key') uiAlert(T.badKey);
+      else if (err.code === 'auth/operation-not-allowed') uiAlert(T.gOff);
+      else if (err.code === 'auth/unauthorized-domain') uiAlert(T.badDomain);
+      else if (err.code === 'auth/popup-blocked') uiAlert(T.popup);
+      else uiAlert(T.loginFail(err.code || err.message));
     }
   };
 
   const handleLogout = async () => {
     const synced = syncState === 'synced' && cloudReady.current;
-    const msg = synced
-      ? 'Çıkış yapınca bu cihazdaki kayıtlar temizlenir; hesabında kayıtlı kalır. Devam edilsin mi?'
-      : '⚠ Kayıtların buluta eşlenmedi! Çıkarsan bu cihazdaki kayıtlar kalıcı olarak silinir. Önce "Yedek indir" ile yedek al. Yine de çıkılsın mı?';
+    const msg = synced ? T.outSynced : T.outUnsynced;
     if (!(await uiConfirm(msg))) return;
     localStorage.removeItem('hk_synced_uid');
     cloudReady.current = false;
@@ -752,7 +839,7 @@ export default function App() {
   const chipClass = syncState === 'synced' ? 'ok' : syncState === 'error' ? 'err' : '';
 
   return (
-    <div className="hk">
+    <div className="hk notranslate" translate="no" lang={lang}>
       <style>{CSS}</style>
       <div className="hk-bg">
         <span className="hk-blob b1" />
@@ -765,34 +852,39 @@ export default function App() {
             <span className="hk-logo">₺</span>
             <div>
               <h1 className="hk-title">Hesap Kitap</h1>
-              <p className="hk-sub">Gelir gider takibim</p>
+              <p className="hk-sub">{T.sub}</p>
             </div>
           </div>
+          <div className="hk-head-r">
+          <button type="button" className="hk-lang" onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} aria-label={T.langBtn} title={T.langBtn}>
+            <b className={lang === 'tr' ? 'on' : ''}>TR</b><b className={lang === 'en' ? 'on' : ''}>EN</b>
+          </button>
           {user && (
             <div className={`hk-chip ${chipClass}`}>
               <i>{initial}</i>
               <span>
-                {syncState === 'synced' && `✓ Eşleşti • ${user.email}`}
-                {syncState === 'loading' && `Eşleniyor… • ${user.email}`}
-                {syncState === 'error' && `⚠ Eşleme hatası • ${user.email}`}
+                {syncState === 'synced' && `✓ ${T.synced} • ${user.email}`}
+                {syncState === 'loading' && `${T.syncing} • ${user.email}`}
+                {syncState === 'error' && `⚠ ${T.syncErr} • ${user.email}`}
                 {syncState === 'local' && user.email}
               </span>
             </div>
           )}
+          </div>
         </header>
 
         <section className="hk-hero">
           <div className="hk-balance">
-            <p className="lbl">Güncel bakiye</p>
+            <p className="lbl">{T.balance}</p>
             <div className="big"><CountUp value={currentBalance} format={fmt2} /> ₺</div>
           </div>
           <div className="hk-side">
             <div className="hk-stat in">
-              <p className="lbl"><TrendingUp /> Bu ay gelen</p>
+              <p className="lbl"><TrendingUp /> {T.monthIn}</p>
               <b><CountUp value={monthlyIncome} format={fmt} /> ₺</b>
             </div>
             <div className="hk-stat out">
-              <p className="lbl"><TrendingDown /> Bu ay harcanan</p>
+              <p className="lbl"><TrendingDown /> {T.monthOut}</p>
               <b><CountUp value={monthlyExpense} format={fmt} /> ₺</b>
             </div>
           </div>
@@ -800,7 +892,7 @@ export default function App() {
 
         <section>
           <div className="hk-sumhead">
-            <h2>Aylık özet</h2>
+            <h2>{T.summary}</h2>
             <select className="hk-select" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
               {monthOptions.map((m) => (
                 <option key={m} value={m}>{monthLabel(m)}</option>
@@ -810,20 +902,20 @@ export default function App() {
 
           <div className="hk-grid">
             <div className="hk-panel">
-              <h3>Kategoriye göre harcama</h3>
+              <h3>{T.byCat}</h3>
               {categoryExpenses.length === 0 ? (
-                <p className="hk-empty">Bu ay henüz harcama yok.</p>
+                <p className="hk-empty">{T.noSpend}</p>
               ) : (
                 <>
                   <div className="hk-stack">
                     {categoryExpenses.map(([cat, val]) => (
-                      <i key={cat} style={{ flex: val, background: colorOf(cat) }} title={cat} />
+                      <i key={cat} style={{ flex: val, background: colorOf(cat) }} title={catLabel(cat)} />
                     ))}
                   </div>
                   {categoryExpenses.map(([cat, val]) => (
                     <div className="hk-cat" key={cat} style={catVars(cat)}>
                       <div className="hk-cat-top">
-                        <span><em>{iconOf(cat)}</em> {cat}</span>
+                        <span><em>{iconOf(cat)}</em> {catLabel(cat)}</span>
                         <span>{fmt(val)} ₺</span>
                       </div>
                       <div className="hk-bar"><i style={{ width: `${Math.max((val / monthlyExpense) * 100, 1)}%` }} /></div>
@@ -834,7 +926,7 @@ export default function App() {
             </div>
 
             <div className="hk-panel">
-              <h3>Günlük harcama</h3>
+              <h3>{T.daily}</h3>
               <div className="hk-chart">
                 <Bar data={chartData} options={chartOptions} />
               </div>
@@ -846,9 +938,9 @@ export default function App() {
           {grouped.length === 0 && (
             <div className="hk-none">
               <span className="hk-none-ico"><Wallet /></span>
-              <b>Bu ay için kayıt yok</b>
-              <p>İlk gelir ya da giderini ekleyerek {monthLabel(selectedMonth)} ayını başlat.</p>
-              <button type="button" onClick={openNew}><Plus /> İlk kaydı ekle</button>
+              <b>{T.noRec}</b>
+              <p>{T.startMonth(monthLabel(selectedMonth))}</p>
+              <button type="button" onClick={openNew}><Plus /> {T.addFirst}</button>
             </div>
           )}
           {grouped.map((g) => (
@@ -862,14 +954,14 @@ export default function App() {
                       <div className="hk-item-l">
                         <span className="hk-ico">{iconOf(item.category)}</span>
                         <div className="hk-item-t">
-                          <b>{item.description || item.category}</b>
-                          <small>{item.category}</small>
+                          <b>{item.description || catLabel(item.category)}</b>
+                          <small>{catLabel(item.category)}</small>
                         </div>
                       </div>
                       <div className="hk-item-r">
                         <span className={`hk-amt ${income ? 'in' : 'out'}`}>{income ? '+' : '-'}{fmt(item.amount)} ₺</span>
-                        <button className="hk-icon-btn" onClick={() => handleEdit(item)} aria-label="Düzenle"><Pencil /></button>
-                        <button className="hk-icon-btn del" onClick={() => handleDelete(item)} aria-label="Sil"><Trash2 /></button>
+                        <button className="hk-icon-btn" onClick={() => handleEdit(item)} aria-label={T.edit}><Pencil /></button>
+                        <button className="hk-icon-btn del" onClick={() => handleDelete(item)} aria-label={T.del}><Trash2 /></button>
                       </div>
                     </div>
                   );
@@ -881,55 +973,55 @@ export default function App() {
 
         <footer className="hk-foot">
           {user ? (
-            <button className="hk-fbtn" onClick={handleLogout}><Cloud /> Çıkış yap</button>
+            <button className="hk-fbtn" onClick={handleLogout}><Cloud /> {T.logout}</button>
           ) : (
-            <button className="hk-fbtn" onClick={handleLogin}><Cloud /> Google ile giriş</button>
+            <button className="hk-fbtn" onClick={handleLogin}><Cloud /> {T.login}</button>
           )}
-          <button className="hk-fbtn" onClick={exportBackup}><Download /> Yedek indir</button>
-          <button className="hk-fbtn" onClick={() => fileRef.current?.click()}><Upload /> Yedek yükle</button>
+          <button className="hk-fbtn" onClick={exportBackup}><Download /> {T.exp}</button>
+          <button className="hk-fbtn" onClick={() => fileRef.current?.click()}><Upload /> {T.imp}</button>
           <input ref={fileRef} className="hk-file" type="file" accept=".json,application/json" onChange={importBackup} />
-          <button className="hk-fbtn" onClick={handleSetInitialBalance}><CircleDot /> Başlangıç bakiyesi</button>
+          <button className="hk-fbtn" onClick={handleSetInitialBalance}><CircleDot /> {T.initBal}</button>
         </footer>
 
-        <button className="hk-fab" onClick={openNew} aria-label="Yeni kayıt"><Plus /></button>
+        <button className="hk-fab" onClick={openNew} aria-label={T.newRec}><Plus /></button>
 
         {isModalOpen && (
           <div className="hk-overlay" onClick={closeModal}>
             <div className="hk-modal" onClick={(e) => e.stopPropagation()}>
-              <h3>{editingId ? '✏️ Kaydı düzenle' : '✨ Yeni kayıt'}</h3>
+              <h3>{editingId ? T.editRec : T.newRecT}</h3>
               <form className="hk-form" onSubmit={handleSubmit}>
                 <div className="hk-two">
-                  <button type="button" className={`hk-type ${type === 'gider' ? 'on-out' : ''}`} onClick={() => { setType('gider'); setCategory(CATEGORIES.gider[0].name); }}>Gider</button>
-                  <button type="button" className={`hk-type ${type === 'gelir' ? 'on-in' : ''}`} onClick={() => { setType('gelir'); setCategory(CATEGORIES.gelir[0].name); }}>Gelir</button>
+                  <button type="button" className={`hk-type ${type === 'gider' ? 'on-out' : ''}`} onClick={() => { setType('gider'); setCategory(CATEGORIES.gider[0].name); }}>{T.expense}</button>
+                  <button type="button" className={`hk-type ${type === 'gelir' ? 'on-in' : ''}`} onClick={() => { setType('gelir'); setCategory(CATEGORIES.gelir[0].name); }}>{T.income}</button>
                 </div>
 
                 <label className="hk-label">
-                  <span>Tutar (₺)</span>
+                  <span>{T.amount}</span>
                   <input className="hk-input" type="number" inputMode="decimal" step="0.01" min="0" required autoFocus value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0" />
                 </label>
 
                 <label className="hk-label">
-                  <span>Kategori</span>
+                  <span>{T.category}</span>
                   <select className="hk-input" value={category} onChange={(e) => setCategory(e.target.value)}>
                     {CATEGORIES[type].map((c) => (
-                      <option key={c.name} value={c.name}>{c.icon} {c.name}</option>
+                      <option key={c.name} value={c.name}>{c.icon} {catLabel(c.name)}</option>
                     ))}
                   </select>
                 </label>
 
                 <label className="hk-label">
-                  <span>Tarih</span>
+                  <span>{T.date}</span>
                   <input className="hk-input" type="date" required value={date} onChange={(e) => setDate(e.target.value)} />
                 </label>
 
                 <label className="hk-label">
-                  <span>Açıklama</span>
-                  <input className="hk-input" type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="İsteğe bağlı" />
+                  <span>{T.desc}</span>
+                  <input className="hk-input" type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder={T.optional} />
                 </label>
 
                 <div className="hk-two">
-                  <button type="button" className="hk-cancel" onClick={closeModal}>Vazgeç</button>
-                  <button type="submit" className="hk-save">Kaydet</button>
+                  <button type="button" className="hk-cancel" onClick={closeModal}>{T.cancel}</button>
+                  <button type="submit" className="hk-save">{T.save}</button>
                 </div>
               </form>
             </div>
@@ -950,11 +1042,11 @@ export default function App() {
                 />
               )}
               {dlg.kind === 'alert' ? (
-                <button className="hk-save" style={{ width: '100%' }} onClick={() => closeDlg()} autoFocus>Tamam</button>
+                <button className="hk-save" style={{ width: '100%' }} onClick={() => closeDlg()} autoFocus>{T.ok}</button>
               ) : (
                 <div className="hk-two">
-                  <button className="hk-cancel" onClick={() => closeDlg(dlg.kind === 'confirm' ? false : null)}>Vazgeç</button>
-                  <button className="hk-save" onClick={() => closeDlg(dlg.kind === 'confirm' ? true : dlg.value)} autoFocus={dlg.kind === 'confirm'}>Tamam</button>
+                  <button className="hk-cancel" onClick={() => closeDlg(dlg.kind === 'confirm' ? false : null)}>{T.cancel}</button>
+                  <button className="hk-save" onClick={() => closeDlg(dlg.kind === 'confirm' ? true : dlg.value)} autoFocus={dlg.kind === 'confirm'}>{T.ok}</button>
                 </div>
               )}
             </div>
