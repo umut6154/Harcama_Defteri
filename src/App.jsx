@@ -5,6 +5,7 @@ import { Bar } from 'react-chartjs-2';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { initFX, triggerConfetti, triggerPuff, useFX } from './hk-fx';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
@@ -711,6 +712,10 @@ export default function App() {
     return groups;
   }, [monthly]);
 
+  // FX hook
+  const fx = useFX();
+  useEffect(() => initFX(), []);
+
   const openNew = () => {
     setEditingId(null);
     setType('gider');
@@ -732,6 +737,9 @@ export default function App() {
     e.preventDefault();
     const val = parseFloat(amount);
     if (!val || val <= 0) return;
+    // >>> EFEKTLER <<<
+    if (type === 'gelir') triggerConfetti(); else triggerPuff();
+    // >>> EFEKTLER SONU <<<
     const entry = { id: editingId || Date.now().toString(), type, amount: val, category, date, description: description.trim() };
     setTransactions((prev) => (editingId ? prev.map((t) => (t.id === editingId ? entry : t)) : [entry, ...prev]));
     if (!date.startsWith(selectedMonth)) setSelectedMonth(date.slice(0, 7));
@@ -855,198 +863,148 @@ export default function App() {
               <p className="hk-sub">{T.sub}</p>
             </div>
           </div>
-          <button type="button" className="hk-lang" onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} aria-label={T.langBtn} title={T.langBtn}>
-            <b className={lang === 'tr' ? 'on' : ''}>TR</b><b className={lang === 'en' ? 'on' : ''}>EN</b>
+          <div className="hk-chip {chipClass}">
+            <i>{initial}</i>
+            <span>{syncState === 'synced' ? T.synced : syncState === 'loading' ? T.syncing : syncState === 'error' ? T.syncErr : 'Yerel'}</span>
+          </div>
+          <button className="hk-lang" onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} aria-label={T.langBtn}>
+            <b className={lang === 'tr' ? 'on' : ''}>TR</b>
+            <b className={lang === 'en' ? 'on' : ''}>EN</b>
           </button>
-          {user && (
-            <div className={`hk-chip ${chipClass}`}>
-              <i>{initial}</i>
-              <span>
-                {syncState === 'synced' && `✓ ${T.synced} • ${user.email}`}
-                {syncState === 'loading' && `${T.syncing} • ${user.email}`}
-                {syncState === 'error' && `⚠ ${T.syncErr} • ${user.email}`}
-                {syncState === 'local' && user.email}
-              </span>
-            </div>
-          )}
         </header>
 
-        <section className="hk-hero">
+        <div className="hk-hero">
           <div className="hk-balance">
-            <p className="lbl">{T.balance}</p>
-            <div className="big"><CountUp value={currentBalance} format={fmt2} /> ₺</div>
+            <div className="lbl">{T.balance}</div>
+            <div className="big"><CountUp value={currentBalance} format={fmt} /> ₺</div>
+            <div className="mini">
+              <TrendingUp className="in" style={{width:14,height:14,color:'#fff'}} /> <span>{T.monthIn}: {fmt(monthlyIncome)} ₺</span>
+              <TrendingDown className="out" style={{width:14,height:14,color:'#fff'}} /> <span>{T.monthOut}: {fmt(monthlyExpense)} ₺</span>
+            </div>
           </div>
           <div className="hk-side">
             <div className="hk-stat in">
-              <p className="lbl"><TrendingUp /> {T.monthIn}</p>
-              <b><CountUp value={monthlyIncome} format={fmt} /> ₺</b>
+              <div className="lbl"><TrendingUp style={{width:15,height:15}} /> {T.monthIn}</div>
+              <b>{fmt(monthlyIncome)} ₺</b>
             </div>
             <div className="hk-stat out">
-              <p className="lbl"><TrendingDown /> {T.monthOut}</p>
-              <b><CountUp value={monthlyExpense} format={fmt} /> ₺</b>
+              <div className="lbl"><TrendingDown style={{width:15,height:15}} /> {T.monthOut}</div>
+              <b>{fmt(monthlyExpense)} ₺</b>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section>
-          <div className="hk-sumhead">
-            <h2>{T.summary}</h2>
-            <select className="hk-select" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
-              {monthOptions.map((m) => (
-                <option key={m} value={m}>{monthLabel(m)}</option>
-              ))}
-            </select>
-          </div>
+        <div className="hk-sumhead">
+          <h2>{T.summary} <select className="hk-select" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>{monthOptions.map((m) => <option key={m} value={m}>{monthLabel(m)}</option>)}</select></h2>
+        </div>
 
-          <div className="hk-grid">
-            <div className="hk-panel">
-              <h3>{T.byCat}</h3>
-              {categoryExpenses.length === 0 ? (
-                <p className="hk-empty">{T.noSpend}</p>
-              ) : (
-                <>
-                  <div className="hk-stack">
-                    {categoryExpenses.map(([cat, val]) => (
-                      <i key={cat} style={{ flex: val, background: colorOf(cat) }} title={catLabel(cat)} />
-                    ))}
+        <div className="hk-grid">
+          <div className="hk-panel">
+            <h3>{T.byCat}</h3>
+            {categoryExpenses.length === 0 ? (
+              <p className="hk-empty">{T.noSpend}</p>
+            ) : (
+              <>
+                <div className="hk-stack">
+                  {categoryExpenses.map(([cat, val], i) => {
+                    const total = categoryExpenses.reduce((a, [, v]) => a + v, 0);
+                    return <i key={cat} style={{flex: `${val / total * 100}%`, background: colorOf(cat)}} />;
+                  })}
+                </div>
+                {categoryExpenses.map(([cat, val]) => (
+                  <div className="hk-cat" key={cat} style={catVars(cat)}>
+                    <div className="hk-cat-top">
+                      <span><em>{iconOf(cat)}</em>{catLabel(cat)}</span>
+                      <span>{fmt(val)} ₺</span>
+                    </div>
+                    <div className="hk-bar"><i style={{width: `${(val / monthlyExpense) * 100}%`}} /></div>
                   </div>
-                  {categoryExpenses.map(([cat, val]) => (
-                    <div className="hk-cat" key={cat} style={catVars(cat)}>
-                      <div className="hk-cat-top">
-                        <span><em>{iconOf(cat)}</em> {catLabel(cat)}</span>
-                        <span>{fmt(val)} ₺</span>
-                      </div>
-                      <div className="hk-bar"><i style={{ width: `${Math.max((val / monthlyExpense) * 100, 1)}%` }} /></div>
-                    </div>
-                  ))}
-                </>
-              )}
-            </div>
+                ))}
+              </>
+            )}
+          </div>
 
-            <div className="hk-panel">
-              <h3>{T.daily}</h3>
-              <div className="hk-chart">
-                <Bar data={chartData} options={chartOptions} />
-              </div>
+          <div className="hk-panel">
+            <h3>{T.daily}</h3>
+            <div className="hk-chart">
+              <Bar data={chartData} options={chartOptions} />
             </div>
           </div>
-        </section>
+        </div>
 
-        <section>
-          {grouped.length === 0 && (
-            <div className="hk-none">
-              <span className="hk-none-ico"><Wallet /></span>
-              <b>{T.noRec}</b>
-              <p>{T.startMonth(monthLabel(selectedMonth))}</p>
-              <button type="button" onClick={openNew}><Plus /> {T.addFirst}</button>
-            </div>
-          )}
-          {grouped.map((g) => (
-            <div key={g.date}>
-              <p className="hk-date">{trDate(g.date)} <small>{dayName(g.date)}</small></p>
-              <div className="hk-list">
-                {g.items.map((item) => {
-                  const income = item.type === 'gelir';
-                  return (
-                    <div className="hk-item" key={item.id} style={catVars(item.category)}>
-                      <div className="hk-item-l">
-                        <span className="hk-ico">{iconOf(item.category)}</span>
-                        <div className="hk-item-t">
-                          <b>{item.description || catLabel(item.category)}</b>
-                          <small>{catLabel(item.category)}</small>
-                        </div>
-                      </div>
-                      <div className="hk-item-r">
-                        <span className={`hk-amt ${income ? 'in' : 'out'}`}>{income ? '+' : '-'}{fmt(item.amount)} ₺</span>
-                        <button className="hk-icon-btn" onClick={() => handleEdit(item)} aria-label={T.edit}><Pencil /></button>
-                        <button className="hk-icon-btn del" onClick={() => handleDelete(item)} aria-label={T.del}><Trash2 /></button>
+        {grouped.length === 0 ? (
+          <div className="hk-none">
+            <div className="hk-none-ico"><Plus style={{width:36,height:36}} /></div>
+            <b>{T.noRec}</b>
+            <p>{T.startMonth(monthLabel(selectedMonth))}</p>
+            <button onClick={openNew}><Plus style={{width:16,height:16}} /> {T.addFirst}</button>
+          </div>
+        ) : (
+          <div className="hk-list">
+            {grouped.map((g) => (
+              <React.Fragment key={g.date}>
+                <div className="hk-date">{dayName(g.date)} {trDate(g.date)} <small>{g.items.length} kayıt</small></div>
+                {g.items.map((t) => (
+                  <div className="hk-item" key={t.id} style={catVars(t.category)}>
+                    <div className="hk-item-l">
+                      <span className="hk-ico">{iconOf(t.category)}</span>
+                      <div className="hk-item-t">
+                        <b>{t.description || catLabel(t.category)}</b>
+                        <small>{catLabel(t.category)}</small>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </section>
-
-        <footer className="hk-foot">
-          {user ? (
-            <button className="hk-fbtn" onClick={handleLogout}><Cloud /> {T.logout}</button>
-          ) : (
-            <button className="hk-fbtn" onClick={handleLogin}><Cloud /> {T.login}</button>
-          )}
-          <button className="hk-fbtn" onClick={exportBackup}><Download /> {T.exp}</button>
-          <button className="hk-fbtn" onClick={() => fileRef.current?.click()}><Upload /> {T.imp}</button>
-          <input ref={fileRef} className="hk-file" type="file" accept=".json,application/json" onChange={importBackup} />
-          <button className="hk-fbtn" onClick={handleSetInitialBalance}><CircleDot /> {T.initBal}</button>
-        </footer>
-
-        <button className="hk-fab" onClick={openNew} aria-label={T.newRec}><Plus /></button>
-
-        {isModalOpen && (
-          <div className="hk-overlay" onClick={closeModal}>
-            <div className="hk-modal" onClick={(e) => e.stopPropagation()}>
-              <h3>{editingId ? T.editRec : T.newRecT}</h3>
-              <form className="hk-form" onSubmit={handleSubmit}>
-                <div className="hk-two">
-                  <button type="button" className={`hk-type ${type === 'gider' ? 'on-out' : ''}`} onClick={() => { setType('gider'); setCategory(CATEGORIES.gider[0].name); }}>{T.expense}</button>
-                  <button type="button" className={`hk-type ${type === 'gelir' ? 'on-in' : ''}`} onClick={() => { setType('gelir'); setCategory(CATEGORIES.gelir[0].name); }}>{T.income}</button>
-                </div>
-
-                <label className="hk-label">
-                  <span>{T.amount}</span>
-                  <input className="hk-input" type="number" inputMode="decimal" step="0.01" min="0" required autoFocus value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0" />
-                </label>
-
-                <label className="hk-label">
-                  <span>{T.category}</span>
-                  <select className="hk-input" value={category} onChange={(e) => setCategory(e.target.value)}>
-                    {CATEGORIES[type].map((c) => (
-                      <option key={c.name} value={c.name}>{c.icon} {catLabel(c.name)}</option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="hk-label">
-                  <span>{T.date}</span>
-                  <input className="hk-input" type="date" required value={date} onChange={(e) => setDate(e.target.value)} />
-                </label>
-
-                <label className="hk-label">
-                  <span>{T.desc}</span>
-                  <input className="hk-input" type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder={T.optional} />
-                </label>
-
-                <div className="hk-two">
-                  <button type="button" className="hk-cancel" onClick={closeModal}>{T.cancel}</button>
-                  <button type="submit" className="hk-save">{T.save}</button>
-                </div>
-              </form>
-            </div>
+                    <div className="hk-item-r">
+                      <span className={`hk-amt ${t.type === 'gider' ? 'out' : 'in'}`}>{t.type === 'gider' ? '-' : '+'}{fmt(t.amount)} ₺</span>
+                      <button className="hk-icon-btn" onClick={() => handleEdit(t)} aria-label={T.edit}><Pencil style={{width:15,height:15}} /></button>
+                      <button className="hk-icon-btn del" onClick={() => handleDelete(t)} aria-label={T.del}><Trash2 style={{width:15,height:15}} /></button>
+                    </div>
+                  </div>
+                ))}
+              </React.Fragment>
+            ))}
           </div>
         )}
+
+        <footer className="hk-foot">
+          <button className="hk-fbtn" onClick={openNew}><Plus style={{width:16,height:16}} /> {T.newRecT}</button>
+          <button className="hk-fbtn" onClick={handleSetInitialBalance}><Wallet style={{width:16,height:16}} /> {T.initBal}</button>
+          <button className="hk-fbtn" onClick={exportBackup}><Download style={{width:16,height:16}} /> {T.exp}</button>
+          <button className="hk-fbtn" onClick={() => fileRef.current?.click()}><Upload style={{width:16,height:16}} /> {T.imp}</button>
+          <input className="hk-file" type="file" ref={fileRef} accept=".json" onChange={importBackup} hidden />
+          {user ? (
+            <button className="hk-fbtn" onClick={handleLogout}><CircleDot style={{width:16,height:16}} /> {T.logout}</button>
+          ) : (
+            <button className="hk-fbtn" onClick={handleLogin}><Cloud style={{width:16,height:16}} /> {T.login}</button>
+          )}
+        </footer>
+
+        <button className="hk-fab" onClick={openNew} aria-label={T.newRec}><Plus style={{width:30,height:30}} /></button>
+
         {dlg && (
-          <div className="hk-overlay top" onClick={() => closeDlg(dlg.kind === 'confirm' ? false : dlg.kind === 'prompt' ? null : undefined)}>
+          <div className="hk-overlay {dlg.kind === 'prompt' ? 'top' : ''}" onClick={() => dlg.kind !== 'prompt' && closeDlg(false)}>
             <div className="hk-modal" onClick={(e) => e.stopPropagation()}>
-              <p className="hk-dlg-msg">{dlg.message}</p>
+              <h3>{dlg.title || (dlg.kind === 'confirm' ? 'Onay' : dlg.kind === 'prompt' ? 'Giriş' : 'Bilgi')}</h3>
+              {dlg.message && <p className="hk-dlg-msg">{dlg.message}</p>}
               {dlg.kind === 'prompt' && (
-                <input
-                  className="hk-input"
-                  autoFocus
-                  value={dlg.value}
-                  onChange={(e) => setDlg({ ...dlg, value: e.target.value })}
-                  onKeyDown={(e) => e.key === 'Enter' && closeDlg(dlg.value)}
-                  style={{ marginBottom: 14 }}
-                />
+                <input className="hk-input" defaultValue={dlg.value} ref={(el) => el?.focus()} onKeyDown={(e) => e.key === 'Enter' && closeDlg(e.target.value)} />
               )}
-              {dlg.kind === 'alert' ? (
-                <button className="hk-save" style={{ width: '100%' }} onClick={() => closeDlg()} autoFocus>{T.ok}</button>
-              ) : (
-                <div className="hk-two">
-                  <button className="hk-cancel" onClick={() => closeDlg(dlg.kind === 'confirm' ? false : null)}>{T.cancel}</button>
-                  <button className="hk-save" onClick={() => closeDlg(dlg.kind === 'confirm' ? true : dlg.value)} autoFocus={dlg.kind === 'confirm'}>{T.ok}</button>
-                </div>
-              )}
+              <div className="hk-form">
+                {dlg.kind === 'confirm' && (
+                  <>
+                    <button className="hk-cancel" onClick={() => closeDlg(false)}>{T.cancel}</button>
+                    <button className="hk-save" onClick={() => closeDlg(true)}>{T.ok}</button>
+                  </>
+                )}
+                {dlg.kind === 'prompt' && (
+                  <>
+                    <button className="hk-cancel" onClick={() => closeDlg(null)}>{T.cancel}</button>
+                    <button className="hk-save" onClick={() => {}}>{T.ok}</button>
+                  </>
+                )}
+                {dlg.kind === 'alert' && (
+                  <button className="hk-save" onClick={() => closeDlg(true)}>{T.ok}</button>
+                )}
+              </div>
             </div>
           </div>
         )}
